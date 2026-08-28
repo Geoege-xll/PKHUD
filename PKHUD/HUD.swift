@@ -26,6 +26,43 @@ public enum HUDContentType: Sendable {
     case label(String?)
     case systemActivity
     case customView(view: UIView)
+
+    // MARK: - Convenient Static Constructors with Default Parameters
+    public static func success(subtitle: String) -> HUDContentType {
+        return .labeledSuccess(title: nil, subtitle: subtitle)
+    }
+
+    public static func success(title: String, subtitle: String? = nil) -> HUDContentType {
+        return .labeledSuccess(title: title, subtitle: subtitle)
+    }
+
+    public static func error(subtitle: String) -> HUDContentType {
+        return .labeledError(title: nil, subtitle: subtitle)
+    }
+
+    public static func error(title: String, subtitle: String? = nil) -> HUDContentType {
+        return .labeledError(title: title, subtitle: subtitle)
+    }
+
+    public static func progress(subtitle: String) -> HUDContentType {
+        return .labeledProgress(title: nil, subtitle: subtitle)
+    }
+
+    public static func progress(title: String, subtitle: String? = nil) -> HUDContentType {
+        return .labeledProgress(title: title, subtitle: subtitle)
+    }
+
+    public static func systemImage(_ name: String, title: String? = nil, subtitle: String? = nil) -> HUDContentType {
+        return .systemImage(name: name, title: title, subtitle: subtitle)
+    }
+
+    public static func image(_ image: UIImage?, title: String? = nil, subtitle: String? = nil) -> HUDContentType {
+        return .labeledImage(image: image, title: title, subtitle: subtitle)
+    }
+
+    public static func rotatingImage(_ image: UIImage?, title: String? = nil, subtitle: String? = nil) -> HUDContentType {
+        return .labeledRotatingImage(image: image, title: title, subtitle: subtitle)
+    }
 }
 
 @MainActor
@@ -167,7 +204,7 @@ public final class HUD {
             return PKHUDRotatingImageView(image: image, title: title, subtitle: subtitle)
 
         case let .systemImage(name, title, subtitle):
-            let config = UIImage.SymbolConfiguration(pointSize: 36, weight: .semibold)
+            let config = UIImage.SymbolConfiguration(pointSize: 28, weight: .semibold)
             let img = UIImage(systemName: name, withConfiguration: config)?.withRenderingMode(.alwaysTemplate)
             let view = PKHUDSquareBaseView(image: img, title: title, subtitle: subtitle)
             view.imageView.tintColor = HUD.tintColor
