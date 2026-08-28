@@ -7,7 +7,7 @@
 
 A modern, lightweight, and concurrency-safe Swift HUD library for iOS 13 and up. Built on UIKit and CoreAnimation with official SF Symbols and adaptive Visual Effects.
 
-一款现代、轻量、支持 Swift 6 并发安全（`@MainActor` / `Sendable`）的纯 Swift iOS HUD 库。支持深浅色模式自适应、SF Symbols 矢量图标、平滑连续圆角及极简便捷调用语法。
+一款现代、轻量、支持 Swift 6 并发安全（`@MainActor` / `Sendable`）的纯 Swift iOS HUD 库。支持深浅色模式自适应、SF Symbols 矢量图标、平滑连续圆角及极简单段提示文本调用语法。
 
 ---
 
@@ -15,11 +15,11 @@ A modern, lightweight, and concurrency-safe Swift HUD library for iOS 13 and up.
 
 - 🔒 **Swift 6 & Strict Concurrency Ready**: 全面支持 Swift 5.9+ / Swift 6 并发安全，主线程隔离保证与 `@MainActor`。
 - 🎨 **Adaptive Material Design**: 采用系统自适应材质毛玻璃（`UIBlurEffect`），无缝适配深色/浅色（Dark Mode）模式。
-- 📐 **Golden Ratio & Compact Size**: 精致的 `110 × 110 pt` 黄金对称比例与自适应弹性排版（上下 23pt 绝对黄金对称留白）。
+- 📐 **Golden Ratio & Symmetric Centering**: 精致的 `110 × 110 pt` 卡片尺寸与严格的 `[图片 + 间距 + 文字]` 整体绝对垂直对称居中排版。
 - ⭕ **Smooth Continuous Corners**: 采用 Apple 原生 `.continuous` 平滑连续曲率圆角，支持自由定制（`HUD.cornerRadius`）。
 - 🔤 **Global Appearance Customization**: 开放全局字体、字体颜色、卡片尺寸及主题色静态配置。
-- 🌟 **SF Symbols & Vector Icons**: 原生集成苹果官方 SF Symbols 矢量图标，清晰细腻。
-- ⚡ **Ergonomic Dot-Syntax API**: 支持快捷构造语法，直接传入提示文本，告别冗余参数。
+- 🌟 **SF Symbols & Vector Icons**: 原生集成苹果官方 SF Symbols 矢量图标与原作者经典矢量动画。
+- ⚡ **Ergonomic Dot-Syntax API**: 全新单文本极简语法（`.success("保存成功")`、`.progress("加载中...")`），告别冗余的双标题参数。
 - 📱 **Keyboard Avoidance**: 内置智能键盘监听，自动避让键盘垂直居中。
 
 ---
@@ -38,7 +38,7 @@ https://github.com/Geoege-xll/PKHUD.git
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/Geoege-xll/PKHUD.git", from: "5.5.0")
+    .package(url: "https://github.com/Geoege-xll/PKHUD.git", from: "5.7.0")
 ]
 ```
 
@@ -47,7 +47,7 @@ dependencies: [
 在 `Podfile` 中添加：
 
 ```ruby
-pod 'PKHUD', :git => 'https://github.com/Geoege-xll/PKHUD.git', :tag => '5.5.0'
+pod 'PKHUD', :git => 'https://github.com/Geoege-xll/PKHUD.git', :tag => '5.7.0'
 ```
 
 ---

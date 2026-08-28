@@ -24,17 +24,11 @@ open class PKHUD: NSObject {
     /// 默认横向宽 HUD 卡片尺寸（默认 220 x 75 pt）
     public static var wideSize: CGSize = CGSize(width: 220.0, height: 75.0)
 
-    /// 默认主标题字体（默认 15pt bold）
-    public static var titleFont: UIFont = UIFont.boldSystemFont(ofSize: 15.0)
+    /// 默认提示文本字体（默认 14pt medium）
+    public static var titleFont: UIFont = UIFont.systemFont(ofSize: 14.0, weight: .medium)
 
-    /// 默认主标题颜色（默认 .label 85% alpha）
+    /// 默认提示文本颜色（默认 .label 85% alpha）
     public static var titleColor: UIColor = UIColor.label.withAlphaComponent(0.85)
-
-    /// 默认副标题字体（默认 13pt system）
-    public static var subtitleFont: UIFont = UIFont.systemFont(ofSize: 13.0)
-
-    /// 默认副标题颜色（默认 .secondaryLabel）
-    public static var subtitleColor: UIColor = UIColor.secondaryLabel
 
     /// 默认图标/动效主题色（默认 .label 85% alpha）
     public static var tintColor: UIColor = UIColor.label.withAlphaComponent(0.85)

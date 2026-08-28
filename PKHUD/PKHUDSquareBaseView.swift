@@ -9,7 +9,7 @@
 
 import UIKit
 
-/// PKHUDSquareBaseView 正方形 HUD 基础容器视图，遵循 PKHUD 原作者经典的 1:2:1 三段式黄金比例排版设计。
+/// PKHUDSquareBaseView 正方形 HUD 基础容器视图，严格遵循 [图片高度 + 间距 + 文字高度] 整体绝对垂直居中。
 @MainActor
 open class PKHUDSquareBaseView: UIView {
 
@@ -33,56 +33,42 @@ open class PKHUDSquareBaseView: UIView {
     /// 便捷初始化正方形 HUD 视图
     /// - Parameters:
     ///   - image: 展示的静态/矢量图标
-    ///   - title: 可选主标题
-    ///   - subtitle: 可选副标题
-    public init(image: UIImage? = nil, title: String? = nil, subtitle: String? = nil) {
+    ///   - title: 可选提示文本
+    public init(image: UIImage? = nil, title: String? = nil) {
         super.init(frame: PKHUDSquareBaseView.defaultSquareBaseViewFrame)
-        self.imageView.image = image
-        titleLabel.text = title
-        subtitleLabel.text = subtitle
         commonInit()
+        self.imageView.image = image
+        self.titleLabel.text = title
     }
 
     private func commonInit() {
         addSubview(imageView)
         addSubview(titleLabel)
-        addSubview(subtitleLabel)
     }
 
-    /// 居中图标视图（位于卡片中间 50% 区域，居中显示）
+    /// 居中图标视图
     public let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.alpha = 0.85
         imageView.clipsToBounds = true
-        imageView.contentMode = .center
+        imageView.contentMode = .scaleAspectFit
         imageView.tintColor = PKHUD.tintColor
         return imageView
     }()
 
-    /// 主标题标签（位于顶部 25% 区域）
+    /// 提示文本标签
     public let titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.font = PKHUD.titleFont
         label.textColor = PKHUD.titleColor
         label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.25
-        return label
-    }()
-
-    /// 副标题标签（位于底部 25% 区域）
-    public let subtitleLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.font = PKHUD.subtitleFont
-        label.textColor = PKHUD.subtitleColor
-        label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 2
         label.minimumScaleFactor = 0.25
         return label
     }()
 
-    /// 重新布局子视图：恢复原作者纯正的 1/4 (标题) : 2/4 (图标居中) : 1/4 (副标题) 经典三段式比例排版
+    /// 重新布局子视图：严格将 [图片高度 + 间距 + 实际文字高度] 作为一个整体计算垂直水平绝对居中
     open override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -91,12 +77,46 @@ open class PKHUDSquareBaseView: UIView {
         let viewWidth = bounds.size.width - 2 * margin
         let viewHeight = bounds.size.height
 
-        let halfHeight = CGFloat(ceilf(CFloat(viewHeight / 2.0)))
-        let quarterHeight = CGFloat(ceilf(CFloat(viewHeight / 4.0)))
-        let threeQuarterHeight = CGFloat(ceilf(CFloat(viewHeight / 4.0 * 3.0)))
+        let hasTitle = !(titleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
 
-        titleLabel.frame = CGRect(origin: CGPoint(x: originX, y: 0.0), size: CGSize(width: viewWidth, height: quarterHeight))
-        imageView.frame = CGRect(origin: CGPoint(x: originX, y: quarterHeight), size: CGSize(width: viewWidth, height: halfHeight))
-        subtitleLabel.frame = CGRect(origin: CGPoint(x: originX, y: threeQuarterHeight), size: CGSize(width: viewWidth, height: quarterHeight))
+        if hasTitle {
+            let imageSize: CGFloat = 44.0
+            let spacing: CGFloat = 10.0
+            let textPadding: CGFloat = 8.0
+            let textWidth = max(0, viewWidth - 2 * textPadding)
+
+            // 根据当前字体动态测量文字实际高度
+            let calculatedSize = titleLabel.sizeThatFits(CGSize(width: textWidth, height: 40.0))
+            let textHeight = max(16.0, min(36.0, ceil(calculatedSize.height)))
+
+            // 核心公式：总内容高度 = 图片高度 + 图文间距 + 文本高度
+            let totalContentHeight = imageSize + spacing + textHeight
+            
+            let topPadding = (viewHeight - totalContentHeight) / 2.0 + 5
+
+            imageView.frame = CGRect(
+                x: (viewWidth - imageSize) / 2.0 + originX,
+                y: topPadding,
+                width: imageSize,
+                height: imageSize
+            )
+
+            titleLabel.frame = CGRect(
+                x: originX + textPadding,
+                y: topPadding + imageSize + spacing,
+                width: textWidth,
+                height: textHeight
+            )
+        } else {
+            // 纯图标模式：50 x 50 pt 大号饱满图标，严格居中锁定在几何正中心 (55, 55)
+            let imageSize: CGFloat = 50.0
+            imageView.frame = CGRect(
+                x: (viewWidth - imageSize) / 2.0 + originX,
+                y: (viewHeight - imageSize) / 2.0,
+                width: imageSize,
+                height: imageSize
+            )
+            titleLabel.frame = .zero
+        }
     }
 }

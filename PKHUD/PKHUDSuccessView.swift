@@ -14,13 +14,14 @@ import UIKit
 open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
 
     var checkmarkShapeLayer: CAShapeLayer = {
+        // 大号清晰对勾路径 (60 x 39 pt)
         let checkmarkPath = UIBezierPath()
-        checkmarkPath.move(to: CGPoint(x: 3.0, y: 20.0))
-        checkmarkPath.addLine(to: CGPoint(x: 20.0, y: 37.0))
-        checkmarkPath.addLine(to: CGPoint(x: 58.0, y: 0.0))
+        checkmarkPath.move(to: CGPoint(x: 3.0, y: 19.0))
+        checkmarkPath.addLine(to: CGPoint(x: 23.0, y: 39.0))
+        checkmarkPath.addLine(to: CGPoint(x: 60.0, y: 0.0))
 
         let layer = CAShapeLayer()
-        layer.frame = CGRect(x: 0.0, y: 0.0, width: 58.0, height: 37.0)
+        layer.bounds = CGRect(x: 0.0, y: 0.0, width: 60.0, height: 39.0)
         layer.path = checkmarkPath.cgPath
 
         layer.fillMode = .forwards
@@ -34,26 +35,43 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
     }()
 
     /// 初始化成功视图
-    /// - Parameters:
-    ///   - title: 可选主标题
-    ///   - subtitle: 可选副标题
-    public init(title: String? = nil, subtitle: String? = nil) {
-        super.init(title: title, subtitle: subtitle)
+    /// - Parameter title: 可选提示文本
+    public init(title: String? = nil) {
+        super.init(title: title)
         layer.addSublayer(checkmarkShapeLayer)
-        checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
 
     /// 解档初始化
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         layer.addSublayer(checkmarkShapeLayer)
-        checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
 
-    /// 布局对勾图层位置（严格位于视图正中心）
+    /// 布局对勾图层位置（纯图标模式居中锁定，带文字模式严格与图片槽位中心对齐）
     open override func layoutSubviews() {
         super.layoutSubviews()
-        checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+
+        let hasTitle = !(titleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+
+        if hasTitle {
+            let imageSize: CGFloat = 42.0
+            let spacing: CGFloat = 8.0
+            let textPadding: CGFloat = 8.0
+            let textWidth = max(0, bounds.width - 2 * textPadding)
+            let calculatedSize = titleLabel.sizeThatFits(CGSize(width: textWidth, height: 40.0))
+            let textHeight = max(16.0, min(36.0, ceil(calculatedSize.height)))
+            let totalContentHeight = imageSize + spacing + textHeight
+            let topPadding = (bounds.height - totalContentHeight) / 2.0
+            let centerY = topPadding + imageSize / 2.0
+
+            // 带文字模式：中大号对勾 (50 x 32 pt)
+            checkmarkShapeLayer.transform = CATransform3DMakeScale(0.82, 0.82, 1.0)
+            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
+        } else {
+            // 纯图标模式：大号饱满对勾 (60 x 39 pt)，居中锁定 (55, 55)
+            checkmarkShapeLayer.transform = CATransform3DIdentity
+            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        }
     }
 
     /// 深浅色外观切换更新

@@ -21,7 +21,7 @@ let package = Package(
                 "Info.plist",
             ],
             resources: [
-                .process("Resources"),
+                .process("Images.xcassets"),
             ]
         ),
     ],

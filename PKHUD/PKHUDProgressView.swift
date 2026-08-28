@@ -15,11 +15,9 @@ import QuartzCore
 open class PKHUDProgressView: PKHUDSquareBaseView, PKHUDAnimating {
 
     /// 初始化进度视图
-    /// - Parameters:
-    ///   - title: 可选主标题
-    ///   - subtitle: 可选副标题
-    public init(title: String? = nil, subtitle: String? = nil) {
-        super.init(image: PKHUDAssets.progressActivityImage, title: title, subtitle: subtitle)
+    /// - Parameter title: 可选提示文本
+    public init(title: String? = nil) {
+        super.init(image: PKHUDAssets.progressActivityImage, title: title)
     }
 
     /// 解档初始化

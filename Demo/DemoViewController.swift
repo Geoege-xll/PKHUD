@@ -45,7 +45,7 @@ class DemoViewController: UIViewController {
 
         // 模拟异步任务
         delay(2.0) {
-            HUD.flash(.success, delay: 1.0)
+            HUD.flash(.success("完成"), delay: 1.0)
         }
     }
 
@@ -54,7 +54,7 @@ class DemoViewController: UIViewController {
     }
 
     @IBAction func showAnimatedStatusProgressHUD(_ sender: AnyObject) {
-        HUD.flash(.labeledProgress(title: nil, subtitle: "加载中.."), delay: 2.0)
+        HUD.flash(.progress("加载中..."), delay: 2.0)
     }
 
     @IBAction func showTextHUD(_ sender: AnyObject) {
