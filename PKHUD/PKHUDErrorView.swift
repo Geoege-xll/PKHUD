@@ -10,6 +10,7 @@
 import UIKit
 
 /// PKHUDErrorView provides an animated error (cross) view.
+@MainActor
 open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
 
     var dashOneLayer = PKHUDErrorView.generateDashLayer()
@@ -25,19 +26,13 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
             return path.cgPath
         }()
 
-        #if swift(>=4.2)
-        dash.lineCap     = .round
-        dash.lineJoin    = .round
-        dash.fillMode    = .forwards
-        #else
-        dash.lineCap     = kCALineCapRound
-        dash.lineJoin    = kCALineJoinRound
-        dash.fillMode    = kCAFillModeForwards
-        #endif
+        dash.lineCap = .round
+        dash.lineJoin = .round
+        dash.fillMode = .forwards
 
-        dash.fillColor   = nil
-        dash.strokeColor = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0).cgColor
-        dash.lineWidth   = 6
+        dash.fillColor = nil
+        dash.strokeColor = UIColor.label.cgColor
+        dash.lineWidth = 6
         return dash
     }
 
@@ -57,44 +52,46 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
         dashTwoLayer.position = layer.position
     }
 
-    func rotationAnimation(_ angle: CGFloat) -> CABasicAnimation {
-        var animation: CABasicAnimation
-        if #available(iOS 9.0, *) {
-            let springAnimation = CASpringAnimation(keyPath: "transform.rotation.z")
-            springAnimation.damping = 1.5
-            springAnimation.mass = 0.22
-            springAnimation.initialVelocity = 0.5
-            animation = springAnimation
-        } else {
-            animation = CABasicAnimation(keyPath: "transform.rotation.z")
-        }
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        dashOneLayer.strokeColor = UIColor.label.cgColor
+        dashTwoLayer.strokeColor = UIColor.label.cgColor
+    }
 
-        animation.fromValue = 0.0
-        animation.toValue = angle * CGFloat(.pi / 180.0)
-        animation.duration = 1.0
-
-        #if swift(>=4.2)
-        let timingFunctionName = CAMediaTimingFunctionName.easeInEaseOut
-        #else
-        let timingFunctionName = kCAMediaTimingFunctionEaseInEaseOut
-        #endif
-
-        animation.timingFunction = CAMediaTimingFunction(name: timingFunctionName)
+    func rotationAnimation(_ angle: CGFloat) -> CAKeyframeAnimation {
+        let animation = CAKeyframeAnimation(keyPath: "transform.rotation.z")
+        let values: [NSNumber] = [0.0, NSNumber(value: Float(angle * (.pi / 180)))]
+        animation.values = values
+        animation.duration = 0.2
+        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        animation.isRemovedOnCompletion = false
+        animation.fillMode = .forwards
         return animation
     }
 
-    public func startAnimation() {
-        let dashOneAnimation = rotationAnimation(-45.0)
-        let dashTwoAnimation = rotationAnimation(45.0)
+    func scaleAnimation() -> CAKeyframeAnimation {
+        let animation = CAKeyframeAnimation(keyPath: "transform.scale")
+        let values: [NSNumber] = [1.0, 1.2, 1.0]
+        animation.values = values
+        animation.duration = 0.2
+        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        animation.isRemovedOnCompletion = false
+        animation.fillMode = .forwards
+        return animation
+    }
 
-        dashOneLayer.transform = CATransform3DMakeRotation(-45 * CGFloat(.pi / 180.0), 0.0, 0.0, 1.0)
-        dashTwoLayer.transform = CATransform3DMakeRotation(45 * CGFloat(.pi / 180.0), 0.0, 0.0, 1.0)
+    open func startAnimation() {
+        let dashOneAnimation = rotationAnimation(45.0)
+        let dashTwoAnimation = rotationAnimation(-45.0)
+
+        dashOneLayer.transform = CATransform3DMakeRotation(45.0 * (.pi / 180), 0.0, 0.0, 1.0)
+        dashTwoLayer.transform = CATransform3DMakeRotation(-45.0 * (.pi / 180), 0.0, 0.0, 1.0)
 
         dashOneLayer.add(dashOneAnimation, forKey: "dashOneAnimation")
         dashTwoLayer.add(dashTwoAnimation, forKey: "dashTwoAnimation")
     }
 
-    public func stopAnimation() {
+    open func stopAnimation() {
         dashOneLayer.removeAnimation(forKey: "dashOneAnimation")
         dashTwoLayer.removeAnimation(forKey: "dashTwoAnimation")
     }

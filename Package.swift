@@ -1,11 +1,11 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 
 import PackageDescription
 
 let package = Package(
     name: "PKHUD",
     platforms: [
-        .iOS(.v9),
+        .iOS(.v13),
     ],
     products: [
         .library(
@@ -19,6 +19,9 @@ let package = Package(
             path: "PKHUD",
             exclude: [
                 "Info.plist",
+            ],
+            resources: [
+                .process("Resources"),
             ]
         ),
     ],

@@ -9,14 +9,20 @@
 
 import UIKit
 
-/// The window used to display the PKHUD within. Placed atop the applications main window.
+/// The container used to display the PKHUD within. Placed atop the application's view hierarchy.
+@MainActor
 internal class ContainerView: UIView {
 
     private var keyboardIsVisible = false
     private var keyboardHeight: CGFloat = 0.0
-    
+
     internal let frameView: FrameView
-    internal init(frameView: FrameView = FrameView()) {
+
+    internal convenience init() {
+        self.init(frameView: FrameView())
+    }
+
+    internal init(frameView: FrameView) {
         self.frameView = frameView
         super.init(frame: CGRect.zero)
         commonInit()
@@ -42,8 +48,6 @@ internal class ContainerView: UIView {
         frameView.center = calculateHudCenter()
         backgroundView.frame = bounds
     }
-    
-    
 
     internal func showFrameView() {
         layer.removeAllAnimations()
@@ -70,7 +74,7 @@ internal class ContainerView: UIView {
         willHide = true
 
         if anim {
-            UIView.animate(withDuration: 0.8, animations: {
+            UIView.animate(withDuration: 0.25, animations: {
                 self.frameView.alpha = 0.0
                 self.hideBackground(animated: false)
             }, completion: { _ in finalize(true) })
@@ -99,25 +103,25 @@ internal class ContainerView: UIView {
 
     internal func hideBackground(animated anim: Bool) {
         if anim {
-            UIView.animate(withDuration: 0.65, animations: {
+            UIView.animate(withDuration: 0.25, animations: {
                 self.backgroundView.alpha = 0.0
             })
         } else {
             backgroundView.alpha = 0.0
         }
     }
-    
+
     // MARK: Notifications
     internal func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    
+
     internal func deregisterFromKeyboardNotifications() {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    
+
     // MARK: Triggered Functions
     @objc private func keyboardWillShow(notification: NSNotification) {
         keyboardIsVisible = true
@@ -128,39 +132,33 @@ internal class ContainerView: UIView {
             self.keyboardHeight = keyboardHeight
         }
         if !self.isHidden {
-            if let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber,
-                let curve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber {
-                animateHUDWith(duration: duration.doubleValue,
-                               curve: UIView.AnimationCurve(rawValue: curve.intValue) ?? UIView.AnimationCurve.easeInOut,
-                               toLocation: calculateHudCenter())
-            }
+            let duration = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.25
+            let curveRaw = (userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue ?? 7
+            let animationOptions = UIView.AnimationOptions(rawValue: UInt(curveRaw << 16))
+
+            UIView.animate(withDuration: duration, delay: 0, options: animationOptions, animations: {
+                self.frameView.center = self.calculateHudCenter()
+            })
         }
     }
-    
+
     @objc private func keyboardWillBeHidden(notification: NSNotification) {
         keyboardIsVisible = false
         if !self.isHidden {
             guard let userInfo = notification.userInfo else {
                 return
             }
-            if let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber,
-                let curve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber {
-                animateHUDWith(duration: duration.doubleValue,
-                               curve: UIView.AnimationCurve(rawValue: curve.intValue) ?? UIView.AnimationCurve.easeInOut,
-                               toLocation: calculateHudCenter())
-            }
+            let duration = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0.25
+            let curveRaw = (userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue ?? 7
+            let animationOptions = UIView.AnimationOptions(rawValue: UInt(curveRaw << 16))
+
+            UIView.animate(withDuration: duration, delay: 0, options: animationOptions, animations: {
+                self.frameView.center = self.calculateHudCenter()
+            })
         }
     }
-    
+
     // MARK: - Helpers
-    private func animateHUDWith(duration: Double, curve: UIView.AnimationCurve, toLocation location: CGPoint) {
-        UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationDuration(TimeInterval(duration))
-        UIView.setAnimationCurve(curve)
-        frameView.center = location
-        UIView.commitAnimations()
-    }
-    
     private func calculateHudCenter() -> CGPoint {
         if !keyboardIsVisible {
             return center

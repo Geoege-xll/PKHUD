@@ -9,7 +9,8 @@
 
 import UIKit
 
-/// PKHUDCheckmarkView provides an animated success (checkmark) view.
+/// PKHUDSuccessView provides an animated success (checkmark) view.
+@MainActor
 open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
 
     var checkmarkShapeLayer: CAShapeLayer = {
@@ -22,19 +23,13 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
         layer.frame = CGRect(x: 3.0, y: 3.0, width: 88.0, height: 56.0)
         layer.path = checkmarkPath.cgPath
 
-        #if swift(>=4.2)
-        layer.fillMode    = .forwards
-        layer.lineCap     = .round
-        layer.lineJoin    = .round
-        #else
-        layer.fillMode    = kCAFillModeForwards
-        layer.lineCap     = kCALineCapRound
-        layer.lineJoin    = kCALineJoinRound
-        #endif
+        layer.fillMode = .forwards
+        layer.lineCap = .round
+        layer.lineJoin = .round
 
-        layer.fillColor   = nil
-        layer.strokeColor = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.0).cgColor
-        layer.lineWidth   = 6.0
+        layer.fillColor = nil
+        layer.strokeColor = UIColor.label.cgColor
+        layer.lineWidth = 6.0
         return layer
     }()
 
@@ -48,6 +43,11 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
         super.init(coder: aDecoder)
         layer.addSublayer(checkmarkShapeLayer)
         checkmarkShapeLayer.position = layer.position
+    }
+
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        checkmarkShapeLayer.strokeColor = UIColor.label.cgColor
     }
 
     open func startAnimation() {

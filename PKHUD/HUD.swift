@@ -9,7 +9,7 @@
 
 import UIKit
 
-public enum HUDContentType {
+public enum HUDContentType: Sendable {
     case success
     case error
     case progress
@@ -22,11 +22,13 @@ public enum HUDContentType {
     case labeledImage(image: UIImage?, title: String?, subtitle: String?)
     case labeledRotatingImage(image: UIImage?, title: String?, subtitle: String?)
 
+    case systemImage(name: String, title: String?, subtitle: String?)
     case label(String?)
     case systemActivity
     case customView(view: UIView)
 }
 
+@MainActor
 public final class HUD {
 
     // MARK: Properties
@@ -36,18 +38,28 @@ public final class HUD {
     }
 
     public static var allowsInteraction: Bool {
-        get { return PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled  }
+        get { return PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled }
         set { PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = newValue }
     }
 
     public static var leadingMargin: CGFloat {
-        get { return PKHUD.sharedHUD.leadingMargin  }
+        get { return PKHUD.sharedHUD.leadingMargin }
         set { PKHUD.sharedHUD.leadingMargin = newValue }
     }
 
     public static var trailingMargin: CGFloat {
-        get { return PKHUD.sharedHUD.trailingMargin  }
+        get { return PKHUD.sharedHUD.trailingMargin }
         set { PKHUD.sharedHUD.trailingMargin = newValue }
+    }
+
+    public static var cornerRadius: CGFloat {
+        get { return PKHUD.sharedHUD.cornerRadius }
+        set { PKHUD.sharedHUD.cornerRadius = newValue }
+    }
+
+    public static var effect: UIVisualEffect? {
+        get { return PKHUD.sharedHUD.effect }
+        set { PKHUD.sharedHUD.effect = newValue }
     }
 
     public static var isVisible: Bool { return PKHUD.sharedHUD.isVisible }
@@ -80,12 +92,12 @@ public final class HUD {
         HUD.show(content, onView: view)
         HUD.hide(afterDelay: delay, completion: completion)
     }
-    
+
     // MARK: Keyboard Methods
     public static func registerForKeyboardNotifications() {
         PKHUD.sharedHUD.registerForKeyboardNotifications()
     }
-    
+
     public static func deregisterFromKeyboardNotifications() {
         PKHUD.sharedHUD.deregisterFromKeyboardNotifications()
     }
@@ -114,6 +126,13 @@ public final class HUD {
             return PKHUDSquareBaseView(image: image, title: title, subtitle: subtitle)
         case let .labeledRotatingImage(image, title, subtitle):
             return PKHUDRotatingImageView(image: image, title: title, subtitle: subtitle)
+
+        case let .systemImage(name, title, subtitle):
+            let config = UIImage.SymbolConfiguration(pointSize: 40, weight: .semibold)
+            let img = UIImage(systemName: name, withConfiguration: config)?.withRenderingMode(.alwaysTemplate)
+            let view = PKHUDSquareBaseView(image: img, title: title, subtitle: subtitle)
+            view.imageView.tintColor = .label
+            return view
 
         case let .label(text):
             return PKHUDTextView(text: text)

@@ -1,5 +1,5 @@
 //
-//  PKHUDProgressVIew.swift
+//  PKHUDProgressView.swift
 //  PKHUD
 //
 //  Created by Philip Kluz on 6/12/15.
@@ -11,6 +11,7 @@ import UIKit
 import QuartzCore
 
 /// PKHUDProgressView provides an indeterminate progress view.
+@MainActor
 open class PKHUDProgressView: PKHUDSquareBaseView, PKHUDAnimating {
 
     public init(title: String? = nil, subtitle: String? = nil) {
@@ -26,5 +27,6 @@ open class PKHUDProgressView: PKHUDSquareBaseView, PKHUDAnimating {
     }
 
     public func stopAnimation() {
+        imageView.layer.removeAnimation(forKey: "progressAnimation")
     }
 }

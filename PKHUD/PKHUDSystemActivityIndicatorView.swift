@@ -10,6 +10,7 @@
 import UIKit
 
 /// PKHUDSystemActivityIndicatorView provides the system UIActivityIndicatorView as an alternative.
+@MainActor
 public final class PKHUDSystemActivityIndicatorView: PKHUDSquareBaseView, PKHUDAnimating {
 
     public init() {
@@ -27,29 +28,29 @@ public final class PKHUDSystemActivityIndicatorView: PKHUDSquareBaseView, PKHUDA
         commonInit()
     }
 
-    func commonInit () {
+    func commonInit() {
         backgroundColor = UIColor.clear
-        alpha = 0.8
+        alpha = 0.95
 
-        self.addSubview(activityIndicatorView)
+        addSubview(activityIndicatorView)
     }
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-        activityIndicatorView.center = self.center
+        activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.midY)
     }
 
     let activityIndicatorView: UIActivityIndicatorView = {
-        #if swift(>=4.2)
-        let activity = UIActivityIndicatorView(style: .whiteLarge)
-        #else
-        let activity = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        #endif
-        activity.color = UIColor.black
+        let activity = UIActivityIndicatorView(style: .large)
+        activity.color = .label
         return activity
     }()
 
     public func startAnimation() {
         activityIndicatorView.startAnimating()
+    }
+
+    public func stopAnimation() {
+        activityIndicatorView.stopAnimating()
     }
 }
