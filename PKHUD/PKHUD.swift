@@ -17,14 +17,14 @@ open class PKHUD: NSObject {
 
     // MARK: - Global Configuration Properties
 
-    /// 默认正方形 HUD 卡片尺寸（默认 120 x 120 pt）
-    public static var squareSize: CGSize = CGSize(width: 120.0, height: 120.0)
+    /// 默认正方形 HUD 卡片尺寸（默认 110 x 110 pt）
+    public static var squareSize: CGSize = CGSize(width: 110.0, height: 110.0)
 
-    /// 默认横向宽 HUD 卡片尺寸（默认 240 x 80 pt）
-    public static var wideSize: CGSize = CGSize(width: 240.0, height: 80.0)
+    /// 默认横向宽 HUD 卡片尺寸（默认 220 x 75 pt）
+    public static var wideSize: CGSize = CGSize(width: 220.0, height: 75.0)
 
-    /// 标题字体大小（默认 16pt bold）
-    public static var titleFont: UIFont = UIFont.boldSystemFont(ofSize: 16.0)
+    /// 标题字体大小（默认 15pt bold）
+    public static var titleFont: UIFont = UIFont.boldSystemFont(ofSize: 15.0)
 
     /// 标题字体颜色（默认 .label）
     public static var titleColor: UIColor = UIColor.label

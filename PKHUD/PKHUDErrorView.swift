@@ -18,11 +18,11 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
 
     class func generateDashLayer() -> CAShapeLayer {
         let dash = CAShapeLayer()
-        dash.frame = CGRect(x: 0.0, y: 0.0, width: 48.0, height: 48.0)
+        dash.frame = CGRect(x: 0.0, y: 0.0, width: 38.0, height: 38.0)
         dash.path = {
             let path = UIBezierPath()
-            path.move(to: CGPoint(x: 0.0, y: 24.0))
-            path.addLine(to: CGPoint(x: 48.0, y: 24.0))
+            path.move(to: CGPoint(x: 0.0, y: 19.0))
+            path.addLine(to: CGPoint(x: 38.0, y: 19.0))
             return path.cgPath
         }()
 
@@ -32,7 +32,7 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
 
         dash.fillColor = nil
         dash.strokeColor = PKHUD.tintColor.cgColor
-        dash.lineWidth = 5.0
+        dash.lineWidth = 4.5
         return dash
     }
 
@@ -55,8 +55,12 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
         let hasSubtitle = !(subtitleLabel.text?.isEmpty ?? true)
 
         let center: CGPoint
-        if hasTitle || hasSubtitle {
-            center = CGPoint(x: bounds.midX, y: bounds.height * 0.40)
+        if hasTitle && hasSubtitle {
+            center = CGPoint(x: bounds.midX, y: bounds.height * 0.50)
+        } else if hasSubtitle {
+            center = CGPoint(x: bounds.midX, y: bounds.height * 0.36)
+        } else if hasTitle {
+            center = CGPoint(x: bounds.midX, y: bounds.height * 0.62)
         } else {
             center = CGPoint(x: bounds.midX, y: bounds.midY)
         }

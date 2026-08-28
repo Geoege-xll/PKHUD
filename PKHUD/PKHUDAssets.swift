@@ -13,15 +13,17 @@ import UIKit
 @MainActor
 open class PKHUDAssets: NSObject {
 
+    public static var symbolConfiguration: UIImage.SymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 28.0, weight: .semibold)
+
     open class var crossImage: UIImage {
-        if let sfImage = UIImage(systemName: "xmark") {
+        if let sfImage = UIImage(systemName: "xmark", withConfiguration: symbolConfiguration)?.withRenderingMode(.alwaysTemplate) {
             return sfImage
         }
         return PKHUDAssets.bundledImage(named: "cross")
     }
 
     open class var checkmarkImage: UIImage {
-        if let sfImage = UIImage(systemName: "checkmark") {
+        if let sfImage = UIImage(systemName: "checkmark", withConfiguration: symbolConfiguration)?.withRenderingMode(.alwaysTemplate) {
             return sfImage
         }
         return PKHUDAssets.bundledImage(named: "checkmark")

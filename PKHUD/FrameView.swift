@@ -13,7 +13,7 @@ import UIKit
 @MainActor
 open class FrameView: UIVisualEffectView {
 
-    open var cornerRadius: CGFloat = 20.0 {
+    open var cornerRadius: CGFloat = 16.0 {
         didSet {
             layer.cornerRadius = cornerRadius
         }

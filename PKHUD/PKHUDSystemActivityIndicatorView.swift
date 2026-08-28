@@ -37,12 +37,24 @@ public final class PKHUDSystemActivityIndicatorView: PKHUDSquareBaseView, PKHUDA
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-        activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+        
+        let hasTitle = !(titleLabel.text?.isEmpty ?? true)
+        let hasSubtitle = !(subtitleLabel.text?.isEmpty ?? true)
+
+        if hasTitle && hasSubtitle {
+            activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.height * 0.50)
+        } else if hasSubtitle {
+            activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.height * 0.36)
+        } else if hasTitle {
+            activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.height * 0.62)
+        } else {
+            activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+        }
     }
 
     let activityIndicatorView: UIActivityIndicatorView = {
         let activity = UIActivityIndicatorView(style: .large)
-        activity.color = .label
+        activity.color = PKHUD.tintColor
         return activity
     }()
 

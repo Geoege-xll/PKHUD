@@ -15,12 +15,12 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
 
     var checkmarkShapeLayer: CAShapeLayer = {
         let checkmarkPath = UIBezierPath()
-        checkmarkPath.move(to: CGPoint(x: 3.0, y: 22.0))
-        checkmarkPath.addLine(to: CGPoint(x: 22.0, y: 42.0))
-        checkmarkPath.addLine(to: CGPoint(x: 60.0, y: 0.0))
+        checkmarkPath.move(to: CGPoint(x: 2.0, y: 16.0))
+        checkmarkPath.addLine(to: CGPoint(x: 16.0, y: 30.0))
+        checkmarkPath.addLine(to: CGPoint(x: 44.0, y: 0.0))
 
         let layer = CAShapeLayer()
-        layer.frame = CGRect(x: 0.0, y: 0.0, width: 60.0, height: 42.0)
+        layer.frame = CGRect(x: 0.0, y: 0.0, width: 44.0, height: 30.0)
         layer.path = checkmarkPath.cgPath
 
         layer.fillMode = .forwards
@@ -29,7 +29,7 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
 
         layer.fillColor = nil
         layer.strokeColor = PKHUD.tintColor.cgColor
-        layer.lineWidth = 5.0
+        layer.lineWidth = 4.5
         return layer
     }()
 
@@ -49,8 +49,14 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
         let hasTitle = !(titleLabel.text?.isEmpty ?? true)
         let hasSubtitle = !(subtitleLabel.text?.isEmpty ?? true)
 
-        if hasTitle || hasSubtitle {
-            let centerY = bounds.height * 0.40
+        if hasTitle && hasSubtitle {
+            let centerY = bounds.height * 0.50
+            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
+        } else if hasSubtitle {
+            let centerY = bounds.height * 0.36
+            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
+        } else if hasTitle {
+            let centerY = bounds.height * 0.62
             checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
         } else {
             checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
