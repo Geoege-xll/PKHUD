@@ -1,168 +1,149 @@
-[![Build Status](https://travis-ci.org/pkluz/PKHUD.svg?branch=master)](https://travis-ci.org/pkluz/PKHUD)
-[![License](https://img.shields.io/cocoapods/l/PKHUD.svg?style=flat)](https://cocoapods.org/pods/PKHUD) 
-[![Platform](https://img.shields.io/cocoapods/p/PKHUD.svg?style=flat)](http://cocoadocs.org/docsets/PKHUD/3.2.1/) 
-[![CocoaPod](https://img.shields.io/cocoapods/v/PKHUD.svg?style=flat)](https://cocoapods.org/pods/PKHUD)
+# PKHUD
+
+[![Swift](https://img.shields.io/badge/Swift-5.9%20%7C%206.0-orange.svg?style=flat)](https://swift.org)
+[![Platform](https://img.shields.io/badge/Platforms-iOS%2013.0+-blue.svg?style=flat)](https://developer.apple.com/ios/)
 [![SPM compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager/)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![License](https://img.shields.io/badge/License-MIT-lightgrey.svg?style=flat)](LICENSE)
 
-![PKHUD - Swift and easy](https://raw.githubusercontent.com/pkluz/PKHUD/master/README_hero.png)
+A modern, lightweight, and concurrency-safe Swift HUD library for iOS 13 and up. Built on UIKit and CoreAnimation with official SF Symbols and adaptive Visual Effects.
 
-A **Swift** based reimplementation of the Apple HUD (Volume, Ringer, Rotation,…) **for iOS 8** and up.
+一款现代、轻量、支持 Swift 6 并发安全（`@MainActor` / `Sendable`）的纯 Swift iOS HUD 库。支持深浅色模式自适应、SF Symbols 矢量图标、平滑连续圆角及极简便捷调用语法。
 
-## Features
-- Official iOS 8 blur effect via **UIVisualEffectsView**.
-- Proper **rotation support**.
-- Size / **Device agnostic**.
-- Works on top of presented view controllers, alerts,...
-- Comes with several *free* resources - Checkmark, Cross, Progress Indicator,…
-- …as well as **animated** ones.
-- Builds as an **iOS 8 framework**.
+---
 
-![PKHUD.gif](https://cloud.githubusercontent.com/assets/1275218/10124182/09f4c406-654f-11e5-9cab-0f2e6f470887.gif)
+## ✨ Features (特性)
 
-## Installation
-**The recommended way is to use CocoaPods.**
+- 🔒 **Swift 6 & Strict Concurrency Ready**: 全面支持 Swift 5.9+ / Swift 6 并发安全，主线程隔离保证与 `@MainActor`。
+- 🎨 **Adaptive Material Design**: 采用系统自适应材质毛玻璃（`UIBlurEffect`），无缝适配深色/浅色（Dark Mode）模式。
+- 📐 **Golden Ratio & Compact Size**: 精致的 `110 × 110 pt` 黄金对称比例与自适应弹性排版。
+- ⭕ **Smooth Continuous Corners**: 采用 Apple 原生 `.continuous` 平滑连续曲率圆角，支持自由定制（`HUD.cornerRadius`）。
+- 🔤 **Global Appearance Customization**: 开放全局字体、字体颜色、卡片尺寸及主题色静态配置。
+- 🌟 **SF Symbols & Vector Icons**: 原生集成苹果官方 SF Symbols 矢量图标，清晰细腻。
+- ⚡ **Ergonomic Dot-Syntax API**: 支持快捷构造语法，无需手动传入多余的 `title: nil`。
+- 📱 **Keyboard Avoidance**: 内置智能键盘监听，自动避让键盘垂直居中。
+
+---
+
+## 📦 Installation (安装)
+
+### Swift Package Manager (Recommended)
+
+在 Xcode 中选择 **File** -> **Add Package Dependencies...**，输入仓库地址：
+
+```
+https://github.com/Geoege-xll/PKHUD.git
+```
+
+或者在 `Package.swift` 中添加：
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/Geoege-xll/PKHUD.git", from: "5.5.0")
+]
+```
 
 ### CocoaPods
 
-To install PKHUD for Swift 2 using CocoaPods, include the following in your Podfile
+在 `Podfile` 中添加：
 
 ```ruby
-pod 'PKHUD', '~> 3.0'
+pod 'PKHUD', :git => 'https://github.com/Geoege-xll/PKHUD.git', :tag => '5.5.0'
 ```
 
-To install PKHUD for Swift 3.x using CocoaPods, include the following in your Podfile
+---
 
-```ruby
-pod 'PKHUD', '~> 4.0'
-```
+## 🚀 Quick Start (快速上手)
 
-To install PKHUD for Swift 4.x, include the following in your Podfile
+### 1. 基础提示调用
 
-```ruby
-pod 'PKHUD', '~> 5.0'
-```
-
-### Carthage
-
-[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks.
-
-You can install Carthage with [Homebrew](http://brew.sh/) using the following command:
-
-```bash
-$ brew update
-$ brew install carthage
-```
-
-To integrate PKHUD into your Xcode project using Carthage, specify it in your `Cartfile`:
-
-```ogdl
-github "pkluz/PKHUD" ~> 4.0
-```
-
-Run `carthage update` to build the framework and drag the built `PKHUD.framework` into your Xcode project.
-
-### Swift Package Manager
-
-To install using Swift Package Manager, add this to the `dependencies:` section in your Package.swift file:
-```swift
-.package(url: "https://github.com/pkluz/PKHUD.git", .upToNextMinor(from: "5.4.0")),
-```
-
-## How To
-
-After adding the framework to your project, you need to import the module
 ```swift
 import PKHUD
-```
 
-Now, you can proceed to show an arbitrary HUD (and have it automatically disappear a second later) like this:
-```swift
-HUD.flash(.success, delay: 1.0)
-```
+// 成功提示（只传副标题）
+HUD.flash(.success(subtitle: "保存成功"), delay: 1.5)
 
-_or_ with a completion handler:
+// 成功提示（同时传主标题与副标题）
+HUD.flash(.success(title: "操作成功", subtitle: "数据已同步至云端"), delay: 2.0)
 
-```swift
-HUD.flash(.success, delay: 1.0) { finished in 
-    // Completion Handler
+// 错误提示
+HUD.flash(.error(subtitle: "网络连接失败"), delay: 2.0)
+
+// 耗时加载中（需手动 hide）
+HUD.show(.progress(subtitle: "加载中..."))
+
+// 异步任务完成后隐藏并展示结果
+Task {
+    await performNetworkTask()
+    HUD.hide()
+    HUD.flash(.success(subtitle: "完成"))
 }
+
+// 纯文本 Toast 提示
+HUD.flash(.label("请先同意用户协议"), delay: 2.0)
+
+// 系统 SF Symbol 矢量图标
+HUD.flash(.systemImage("heart.fill", subtitle: "已添加到收藏"), delay: 1.5)
 ```
 
-alternatively, you can use the more verbose and flexible “plumbing” API:
+---
+
+## 🛠 Global Configuration (全局配置)
+
+你可以在 `AppDelegate`、`SceneDelegate` 或封装层中一行代码完成全局样式定制：
 
 ```swift
-PKHUD.sharedHUD.contentView = PKHUDSuccessView()
-PKHUD.sharedHUD.show()
-PKHUD.sharedHUD.hide(afterDelay: 1.0) { success in 
-    // Completion Handler
-}
+import PKHUD
+
+// 1. 卡片尺寸与圆角
+HUD.squareSize = CGSize(width: 110, height: 110)
+HUD.cornerRadius = 16.0
+
+// 2. 标题与正文字体
+HUD.titleFont = UIFont.boldSystemFont(ofSize: 15)
+HUD.subtitleFont = UIFont.systemFont(ofSize: 13)
+
+// 3. 字体颜色与图标主题色（默认自适应系统深浅模式）
+HUD.titleColor = .label
+HUD.subtitleColor = .secondaryLabel
+HUD.tintColor = .label
+
+// 4. 背景遮罩与交互拦截
+HUD.dimsBackground = true      // 是否显示半透明遮罩变暗背景
+HUD.allowsInteraction = false  // 是否允许穿透 HUD 交互
 ```
 
-You can also hot-swap content views - this can prove useful if you want to display a progress HUD first and transform it into a success or error HUD after an asynchronous operation has finished.
+---
+
+## ⌨️ Keyboard Avoidance (键盘避让)
+
+如果页面中包含输入框，可注册键盘监听通知，HUD 会在键盘弹起时自动上移避让：
+
 ```swift
-HUD.show(.progress)
-        
-// Now some long running task starts...
-DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-    // ...and once it finishes we flash the HUD for a second.
-   HUD.flash(.success, delay: 1.0)
-}
+// 开启键盘监听
+HUD.registerForKeyboardNotifications()
+
+// 注销键盘监听（可在 deinit 或页面离开时安全调用）
+HUD.deregisterFromKeyboardNotifications()
 ```
 
-Please note that there are _multiple_ types of content views that ship with PKHUD. You can find them as separate files in the project folder as well as in the `ContentViews` group in Xcode.
+---
 
-## Communication _(Hat Tip AlamoFire)_
+## 📋 HUDContentType Overview (内容类型一览)
 
-- If you **need help**, use [Stack Overflow](http://stackoverflow.com/questions/tagged/pkhud). (Tag 'pkhud')
-- If you'd like to **ask a general question**, use [Stack Overflow](http://stackoverflow.com/questions/tagged/pkhud).
-- If you **found a bug**, open an issue.
-- If you **have a feature request**, open an issue.
-- If you **want to contribute**, submit a pull request.
+| 类型 | 说明 | 调用示例 |
+| :--- | :--- | :--- |
+| `.success` | 成功动画对勾 | `HUD.flash(.success(subtitle: "成功"))` |
+| `.error` | 错误动画叉号 | `HUD.flash(.error(subtitle: "失败"))` |
+| `.progress` | 旋转加载菊花 | `HUD.show(.progress(subtitle: "加载中..."))` |
+| `.systemImage` | SF Symbol 矢量图标 | `HUD.flash(.systemImage("star.fill", subtitle: "已收藏"))` |
+| `.label` | 纯文本卡片（最多 3 行） | `HUD.flash(.label("提示内容"))` |
+| `.systemActivity` | 原生大号 Activity 指示器 | `HUD.show(.systemActivity)` |
+| `.image` | 自定义静态图片 | `HUD.flash(.image(myImage, subtitle: "已保存"))` |
+| `.rotatingImage` | 自定义旋转动画图片 | `HUD.show(.rotatingImage(mySpinnerImage))` |
+| `.customView` | 完全自定义 UIView 视图 | `HUD.show(.customView(view: myCustomView))` |
 
+---
 
-## Customization
+## 📄 License
 
-There are two properties at your disposal to customize general behavior.
-
-- `PKHUD.sharedHUD.dimsBackground: Bool` defines whether the background is slightly dimmed when the HUD is shown.
-
-- `PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled: Bool` defines whether the underlying views respond to touches while the HUD is shown.
-
-Additionally you are free to create you own custom content views. They can descend from any `UIView` type or the predefined base classes `PKHUDSquareBaseView` and `PKHUDWideBaseView`.
-
-**Note**: It's neither possible to customize the general look and feel, nor do I plan to add that feature. You are free to provide any content views you wish but the blurring, corner radius and shading will remain the same.
-
-## Credits
-
-PKHUD is owned and maintained by Philip Kluz. Other mantainers are:
-
-- Piergiuseppe Longo [twitter](https://twitter.com/pglongo)
-
-## Xamarin
-
-If you are Xamarin developer you can use this [port](https://github.com/Prin53/Xamarin.iOS.PKHUD).
-
-## License
-
-The MIT License (MIT)
-
-Copyright (c) 2015 Philip Kluz (Philip.Kluz@gmail.com)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+PKHUD is released under the **MIT License**. See [LICENSE](LICENSE) for details.
