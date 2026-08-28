@@ -38,22 +38,10 @@ public final class PKHUDSystemActivityIndicatorView: PKHUDSquareBaseView, PKHUDA
         addSubview(activityIndicatorView)
     }
 
-    /// 布局指示器中心点
+    /// 布局指示器中心点（始终锁定在卡片几何正中心）
     public override func layoutSubviews() {
         super.layoutSubviews()
-        
-        let hasTitle = !(titleLabel.text?.isEmpty ?? true)
-        let hasSubtitle = !(subtitleLabel.text?.isEmpty ?? true)
-
-        if hasTitle && hasSubtitle {
-            activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.height * 0.50)
-        } else if hasSubtitle {
-            activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.height * 0.36)
-        } else if hasTitle {
-            activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.height * 0.62)
-        } else {
-            activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.midY)
-        }
+        activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.midY)
     }
 
     let activityIndicatorView: UIActivityIndicatorView = {

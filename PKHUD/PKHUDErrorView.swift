@@ -53,26 +53,11 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
         layer.addSublayer(dashTwoLayer)
     }
 
-    /// 布局子视图与叉号图层位置
+    /// 布局子视图与叉号图层位置（始终锁定在卡片几何正中心）
     open override func layoutSubviews() {
         super.layoutSubviews()
-
-        let hasTitle = !(titleLabel.text?.isEmpty ?? true)
-        let hasSubtitle = !(subtitleLabel.text?.isEmpty ?? true)
-
-        let center: CGPoint
-        if hasTitle && hasSubtitle {
-            center = CGPoint(x: bounds.midX, y: bounds.midY)
-        } else if hasSubtitle {
-            center = CGPoint(x: bounds.midX, y: bounds.height * 0.36)
-        } else if hasTitle {
-            center = CGPoint(x: bounds.midX, y: bounds.height * 0.64)
-        } else {
-            center = CGPoint(x: bounds.midX, y: bounds.midY)
-        }
-
-        dashOneLayer.position = center
-        dashTwoLayer.position = center
+        dashOneLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        dashTwoLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
 
     /// 深浅色外观切换更新

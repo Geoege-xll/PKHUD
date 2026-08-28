@@ -9,7 +9,7 @@
 
 import UIKit
 
-/// PKHUDSquareBaseView 正方形 HUD 基础容器视图，负责图片与双行文本（标题/副标题）的自适应居中排版。
+/// PKHUDSquareBaseView 正方形 HUD 基础容器视图，采用经典的三段式黄金比例排版（顶部标题、中间居中图标、底部副标题）。
 @MainActor
 open class PKHUDSquareBaseView: UIView {
 
@@ -53,7 +53,7 @@ open class PKHUDSquareBaseView: UIView {
         return imageView
     }()
 
-    /// 主标题标签
+    /// 主标题标签（固定位于顶部 1/4 区域）
     public let titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -64,7 +64,7 @@ open class PKHUDSquareBaseView: UIView {
         return label
     }()
 
-    /// 副标题标签
+    /// 副标题标签（固定位于底部 1/4 区域）
     public let subtitleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -76,7 +76,7 @@ open class PKHUDSquareBaseView: UIView {
         return label
     }()
 
-    /// 重新布局子视图（根据是否存在标题/副标题进行自适应黄金居中排版）
+    /// 重新布局子视图：严格遵循三段式排版，图标始终锁定在 HUD 几何正中心 (bounds.midX, bounds.midY)
     open override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -84,41 +84,26 @@ open class PKHUDSquareBaseView: UIView {
         let originX: CGFloat = margin > 0 ? margin : 0.0
         let viewWidth = bounds.size.width - 2 * margin
         let viewHeight = bounds.size.height
-        let textPadding: CGFloat = 8.0
+        let textPadding: CGFloat = 6.0
         let textWidth = max(0, viewWidth - 2 * textPadding)
 
-        let hasTitle = !(titleLabel.text?.isEmpty ?? true)
-        let hasSubtitle = !(subtitleLabel.text?.isEmpty ?? true)
+        let quarterHeight = ceil(viewHeight / 4.0)
+        let threeQuarterHeight = viewHeight - quarterHeight
 
-        if hasTitle && hasSubtitle {
-            let labelHeight: CGFloat = 20.0
-            let imageSize: CGFloat = 34.0
-            let topPadding = max(6.0, (viewHeight - 2 * labelHeight - imageSize - 16.0) / 2.0)
+        // 1. 顶部标题槽位（占顶部 1/4）
+        titleLabel.frame = CGRect(x: originX + textPadding, y: 4.0, width: textWidth, height: quarterHeight - 4.0)
 
-            titleLabel.frame = CGRect(x: originX + textPadding, y: topPadding, width: textWidth, height: labelHeight)
-            imageView.frame = CGRect(x: (viewWidth - imageSize) / 2.0 + originX, y: topPadding + labelHeight + 8.0, width: imageSize, height: imageSize)
-            subtitleLabel.frame = CGRect(x: originX + textPadding, y: topPadding + labelHeight + imageSize + 16.0, width: textWidth, height: labelHeight)
-        } else if hasSubtitle {
-            let imageSize: CGFloat = 40.0
-            let labelHeight: CGFloat = 24.0
-            let topPadding = max(8.0, (viewHeight - imageSize - labelHeight - 10.0) / 2.0)
+        // 2. 中间图标槽位（始终锁定在卡片几何正中心）
+        let hasText = !(titleLabel.text?.isEmpty ?? true) || !(subtitleLabel.text?.isEmpty ?? true)
+        let iconSize: CGFloat = hasText ? 38.0 : 48.0
+        imageView.frame = CGRect(
+            x: (viewWidth - iconSize) / 2.0 + originX,
+            y: (viewHeight - iconSize) / 2.0,
+            width: iconSize,
+            height: iconSize
+        )
 
-            imageView.frame = CGRect(x: (viewWidth - imageSize) / 2.0 + originX, y: topPadding, width: imageSize, height: imageSize)
-            subtitleLabel.frame = CGRect(x: originX + textPadding, y: topPadding + imageSize + 10.0, width: textWidth, height: labelHeight)
-            titleLabel.frame = .zero
-        } else if hasTitle {
-            let labelHeight: CGFloat = 24.0
-            let imageSize: CGFloat = 40.0
-            let topPadding = max(8.0, (viewHeight - labelHeight - imageSize - 10.0) / 2.0)
-
-            titleLabel.frame = CGRect(x: originX + textPadding, y: topPadding, width: textWidth, height: labelHeight)
-            imageView.frame = CGRect(x: (viewWidth - imageSize) / 2.0 + originX, y: topPadding + labelHeight + 10.0, width: imageSize, height: imageSize)
-            subtitleLabel.frame = .zero
-        } else {
-            let imageSize: CGFloat = 48.0
-            imageView.frame = CGRect(x: (viewWidth - imageSize) / 2.0 + originX, y: (viewHeight - imageSize) / 2.0, width: imageSize, height: imageSize)
-            titleLabel.frame = .zero
-            subtitleLabel.frame = .zero
-        }
+        // 3. 底部副标题槽位（占底部 1/4）
+        subtitleLabel.frame = CGRect(x: originX + textPadding, y: threeQuarterHeight - 2.0, width: textWidth, height: quarterHeight)
     }
 }
