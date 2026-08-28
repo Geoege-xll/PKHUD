@@ -72,32 +72,38 @@ open class PKHUDSquareBaseView: UIView {
         let originX: CGFloat = margin > 0 ? margin : 0.0
         let viewWidth = bounds.size.width - 2 * margin
         let viewHeight = bounds.size.height
+        let textPadding: CGFloat = 8.0
+        let textWidth = max(0, viewWidth - 2 * textPadding)
 
         let hasTitle = !(titleLabel.text?.isEmpty ?? true)
         let hasSubtitle = !(subtitleLabel.text?.isEmpty ?? true)
 
         if hasTitle && hasSubtitle {
-            let labelHeight: CGFloat = ceil(viewHeight * 0.20)
+            let labelHeight: CGFloat = 20.0
             let imageSize: CGFloat = 34.0
-            titleLabel.frame = CGRect(x: originX, y: 4, width: viewWidth, height: labelHeight)
-            imageView.frame = CGRect(x: (viewWidth - imageSize) / 2.0 + originX, y: labelHeight + 2, width: imageSize, height: imageSize)
-            subtitleLabel.frame = CGRect(x: originX, y: viewHeight - labelHeight - 4, width: viewWidth, height: labelHeight)
+            let topPadding = max(6.0, (viewHeight - 2 * labelHeight - imageSize - 16.0) / 2.0)
+
+            titleLabel.frame = CGRect(x: originX + textPadding, y: topPadding, width: textWidth, height: labelHeight)
+            imageView.frame = CGRect(x: (viewWidth - imageSize) / 2.0 + originX, y: topPadding + labelHeight + 8.0, width: imageSize, height: imageSize)
+            subtitleLabel.frame = CGRect(x: originX + textPadding, y: topPadding + labelHeight + imageSize + 16.0, width: textWidth, height: labelHeight)
         } else if hasSubtitle {
-            let labelHeight: CGFloat = ceil(viewHeight * 0.26)
-            let imageSize: CGFloat = 38.0
-            let imageY = (viewHeight - labelHeight - imageSize) / 2.0 + 2
-            imageView.frame = CGRect(x: (viewWidth - imageSize) / 2.0 + originX, y: imageY, width: imageSize, height: imageSize)
-            subtitleLabel.frame = CGRect(x: originX, y: viewHeight - labelHeight - 4, width: viewWidth, height: labelHeight)
+            let imageSize: CGFloat = 40.0
+            let labelHeight: CGFloat = 24.0
+            let topPadding = max(8.0, (viewHeight - imageSize - labelHeight - 10.0) / 2.0)
+
+            imageView.frame = CGRect(x: (viewWidth - imageSize) / 2.0 + originX, y: topPadding, width: imageSize, height: imageSize)
+            subtitleLabel.frame = CGRect(x: originX + textPadding, y: topPadding + imageSize + 10.0, width: textWidth, height: labelHeight)
             titleLabel.frame = .zero
         } else if hasTitle {
-            let labelHeight: CGFloat = ceil(viewHeight * 0.26)
-            let imageSize: CGFloat = 38.0
-            titleLabel.frame = CGRect(x: originX, y: 6, width: viewWidth, height: labelHeight)
-            let imageY = labelHeight + (viewHeight - labelHeight - imageSize) / 2.0 - 2
-            imageView.frame = CGRect(x: (viewWidth - imageSize) / 2.0 + originX, y: imageY, width: imageSize, height: imageSize)
+            let labelHeight: CGFloat = 24.0
+            let imageSize: CGFloat = 40.0
+            let topPadding = max(8.0, (viewHeight - labelHeight - imageSize - 10.0) / 2.0)
+
+            titleLabel.frame = CGRect(x: originX + textPadding, y: topPadding, width: textWidth, height: labelHeight)
+            imageView.frame = CGRect(x: (viewWidth - imageSize) / 2.0 + originX, y: topPadding + labelHeight + 10.0, width: imageSize, height: imageSize)
             subtitleLabel.frame = .zero
         } else {
-            let imageSize: CGFloat = 46.0
+            let imageSize: CGFloat = 48.0
             imageView.frame = CGRect(x: (viewWidth - imageSize) / 2.0 + originX, y: (viewHeight - imageSize) / 2.0, width: imageSize, height: imageSize)
             titleLabel.frame = .zero
             subtitleLabel.frame = .zero

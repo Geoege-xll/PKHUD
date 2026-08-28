@@ -50,13 +50,12 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
         let hasSubtitle = !(subtitleLabel.text?.isEmpty ?? true)
 
         if hasTitle && hasSubtitle {
-            let centerY = bounds.height * 0.50
-            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
+            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
         } else if hasSubtitle {
             let centerY = bounds.height * 0.36
             checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
         } else if hasTitle {
-            let centerY = bounds.height * 0.62
+            let centerY = bounds.height * 0.64
             checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
         } else {
             checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)

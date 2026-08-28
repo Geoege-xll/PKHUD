@@ -56,11 +56,11 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
 
         let center: CGPoint
         if hasTitle && hasSubtitle {
-            center = CGPoint(x: bounds.midX, y: bounds.height * 0.50)
+            center = CGPoint(x: bounds.midX, y: bounds.midY)
         } else if hasSubtitle {
             center = CGPoint(x: bounds.midX, y: bounds.height * 0.36)
         } else if hasTitle {
-            center = CGPoint(x: bounds.midX, y: bounds.height * 0.62)
+            center = CGPoint(x: bounds.midX, y: bounds.height * 0.64)
         } else {
             center = CGPoint(x: bounds.midX, y: bounds.midY)
         }
