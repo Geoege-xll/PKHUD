@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name                      = 'PKHUD'
   s.module_name               = 'PKHUD'
-  s.version                   = '5.5.0'
+  s.version                   = '5.6.0'
   s.summary                   = 'A modern Swift based reimplementation of the Apple HUD for iOS 13 and up'
   s.homepage                  = 'https://github.com/Geoege-xll/PKHUD'
   s.license                   = 'MIT'
