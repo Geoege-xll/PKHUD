@@ -94,12 +94,16 @@ public final class HUD {
     }
 
     // MARK: Keyboard Methods
-    public static func registerForKeyboardNotifications() {
-        PKHUD.sharedHUD.registerForKeyboardNotifications()
+    public nonisolated static func registerForKeyboardNotifications() {
+        Task { @MainActor in
+            PKHUD.sharedHUD.registerForKeyboardNotifications()
+        }
     }
 
-    public static func deregisterFromKeyboardNotifications() {
-        PKHUD.sharedHUD.deregisterFromKeyboardNotifications()
+    public nonisolated static func deregisterFromKeyboardNotifications() {
+        Task { @MainActor in
+            PKHUD.sharedHUD.deregisterFromKeyboardNotifications()
+        }
     }
 
     // MARK: Private methods

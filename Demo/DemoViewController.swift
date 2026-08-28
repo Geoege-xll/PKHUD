@@ -66,7 +66,7 @@ class DemoViewController: UIViewController {
     }
     
     deinit {
-//        HUD.deregisterFromKeyboardNotifications()
+        HUD.deregisterFromKeyboardNotifications()
     }
 
     /*
