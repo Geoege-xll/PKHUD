@@ -46,8 +46,9 @@ public final class PKHUDSystemActivityIndicatorView: PKHUDSquareBaseView, PKHUDA
         let hasTitle = !(titleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
 
         if hasTitle {
-            let topPadding = (bounds.height - (32.0 + 12.0 + 20.0)) / 2.0
-            let centerY = topPadding + 32.0 / 2.0
+            let vPadding: CGFloat = 16.0
+            let iconSize: CGFloat = 32.0
+            let centerY = vPadding + iconSize / 2.0
             activityIndicatorView.center = CGPoint(x: bounds.midX, y: centerY)
         } else {
             activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.midY)

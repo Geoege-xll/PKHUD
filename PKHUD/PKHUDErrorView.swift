@@ -51,7 +51,7 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
         layer.addSublayer(dashTwoLayer)
     }
 
-    /// 布局子视图与叉号图层位置（与图标槽位严格对齐）
+    /// 布局子视图与叉号图层位置（严格与图片槽位中心对齐）
     open override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -59,8 +59,9 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
 
         let center: CGPoint
         if hasTitle {
-            let topPadding = (bounds.height - (32.0 + 12.0 + 20.0)) / 2.0
-            let centerY = topPadding + 32.0 / 2.0
+            let vPadding: CGFloat = 16.0
+            let iconSize: CGFloat = 32.0
+            let centerY = vPadding + iconSize / 2.0
             center = CGPoint(x: bounds.midX, y: centerY)
         } else {
             center = CGPoint(x: bounds.midX, y: bounds.midY)
