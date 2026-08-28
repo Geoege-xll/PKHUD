@@ -15,12 +15,12 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
 
     var checkmarkShapeLayer: CAShapeLayer = {
         let checkmarkPath = UIBezierPath()
-        checkmarkPath.move(to: CGPoint(x: 2.0, y: 16.0))
-        checkmarkPath.addLine(to: CGPoint(x: 16.0, y: 30.0))
-        checkmarkPath.addLine(to: CGPoint(x: 44.0, y: 0.0))
+        checkmarkPath.move(to: CGPoint(x: 2.0, y: 15.0))
+        checkmarkPath.addLine(to: CGPoint(x: 15.0, y: 28.0))
+        checkmarkPath.addLine(to: CGPoint(x: 40.0, y: 0.0))
 
         let layer = CAShapeLayer()
-        layer.frame = CGRect(x: 0.0, y: 0.0, width: 44.0, height: 30.0)
+        layer.frame = CGRect(x: 0.0, y: 0.0, width: 40.0, height: 28.0)
         layer.path = checkmarkPath.cgPath
 
         layer.fillMode = .forwards
@@ -29,7 +29,7 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
 
         layer.fillColor = nil
         layer.strokeColor = PKHUD.tintColor.cgColor
-        layer.lineWidth = 4.5
+        layer.lineWidth = 4.0
         return layer
     }()
 
@@ -56,15 +56,16 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
         let hasSubtitle = !(subtitleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
 
         if hasTitle && hasSubtitle {
-            let centerY = 4.0 + 18.0 + 6.0 + 34.0 / 2.0
+            let topPadding = max(6.0, (bounds.height - (18.0 + 8.0 + 30.0 + 8.0 + 18.0)) / 2.0)
+            let centerY = topPadding + 18.0 + 8.0 + 30.0 / 2.0
             checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
         } else if hasSubtitle {
-            let topPadding = (bounds.height - (36.0 + 8.0 + 20.0)) / 2.0
-            let centerY = topPadding + 36.0 / 2.0
+            let topPadding = (bounds.height - (32.0 + 12.0 + 20.0)) / 2.0
+            let centerY = topPadding + 32.0 / 2.0
             checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
         } else if hasTitle {
-            let topPadding = (bounds.height - (20.0 + 8.0 + 36.0)) / 2.0
-            let centerY = topPadding + 20.0 + 8.0 + 36.0 / 2.0
+            let topPadding = (bounds.height - (20.0 + 12.0 + 32.0)) / 2.0
+            let centerY = topPadding + 20.0 + 12.0 + 32.0 / 2.0
             checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
         } else {
             checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)

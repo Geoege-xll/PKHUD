@@ -18,11 +18,11 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
 
     class func generateDashLayer() -> CAShapeLayer {
         let dash = CAShapeLayer()
-        dash.frame = CGRect(x: 0.0, y: 0.0, width: 38.0, height: 38.0)
+        dash.frame = CGRect(x: 0.0, y: 0.0, width: 34.0, height: 34.0)
         dash.path = {
             let path = UIBezierPath()
-            path.move(to: CGPoint(x: 0.0, y: 19.0))
-            path.addLine(to: CGPoint(x: 38.0, y: 19.0))
+            path.move(to: CGPoint(x: 0.0, y: 17.0))
+            path.addLine(to: CGPoint(x: 34.0, y: 17.0))
             return path.cgPath
         }()
 
@@ -32,7 +32,7 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
 
         dash.fillColor = nil
         dash.strokeColor = PKHUD.tintColor.cgColor
-        dash.lineWidth = 4.5
+        dash.lineWidth = 4.0
         return dash
     }
 
@@ -62,15 +62,16 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
 
         let center: CGPoint
         if hasTitle && hasSubtitle {
-            let centerY = 4.0 + 18.0 + 6.0 + 34.0 / 2.0
+            let topPadding = max(6.0, (bounds.height - (18.0 + 8.0 + 30.0 + 8.0 + 18.0)) / 2.0)
+            let centerY = topPadding + 18.0 + 8.0 + 30.0 / 2.0
             center = CGPoint(x: bounds.midX, y: centerY)
         } else if hasSubtitle {
-            let topPadding = (bounds.height - (36.0 + 8.0 + 20.0)) / 2.0
-            let centerY = topPadding + 36.0 / 2.0
+            let topPadding = (bounds.height - (32.0 + 12.0 + 20.0)) / 2.0
+            let centerY = topPadding + 32.0 / 2.0
             center = CGPoint(x: bounds.midX, y: centerY)
         } else if hasTitle {
-            let topPadding = (bounds.height - (20.0 + 8.0 + 36.0)) / 2.0
-            let centerY = topPadding + 20.0 + 8.0 + 36.0 / 2.0
+            let topPadding = (bounds.height - (20.0 + 12.0 + 32.0)) / 2.0
+            let centerY = topPadding + 20.0 + 12.0 + 32.0 / 2.0
             center = CGPoint(x: bounds.midX, y: centerY)
         } else {
             center = CGPoint(x: bounds.midX, y: bounds.midY)

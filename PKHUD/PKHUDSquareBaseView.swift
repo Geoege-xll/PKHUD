@@ -94,19 +94,19 @@ open class PKHUDSquareBaseView: UIView {
             // 模式 1: 标题 + 图标 + 副标题（三段式全内容，均分对称）
             let titleHeight: CGFloat = 18.0
             let subtitleHeight: CGFloat = 18.0
-            let imageSize: CGFloat = 34.0
-            let spacing: CGFloat = 6.0
+            let imageSize: CGFloat = 30.0
+            let spacing: CGFloat = 8.0
             let totalContentHeight = titleHeight + spacing + imageSize + spacing + subtitleHeight
-            let topPadding = max(4.0, (viewHeight - totalContentHeight) / 2.0)
+            let topPadding = max(6.0, (viewHeight - totalContentHeight) / 2.0)
 
             titleLabel.frame = CGRect(x: originX + textPadding, y: topPadding, width: textWidth, height: titleHeight)
             imageView.frame = CGRect(x: (viewWidth - imageSize) / 2.0 + originX, y: topPadding + titleHeight + spacing, width: imageSize, height: imageSize)
             subtitleLabel.frame = CGRect(x: originX + textPadding, y: topPadding + titleHeight + spacing + imageSize + spacing, width: textWidth, height: subtitleHeight)
         } else if hasSubtitle {
-            // 模式 2: 仅副标题 + 图标（最常见的单文本 Loading / 成功提示，整体作为一个组合整体严格垂直对称居中）
-            let imageSize: CGFloat = 36.0
+            // 模式 2: 仅副标题 + 图标（最常见的单文本 Loading / 成功提示，整体作为一个组合严格垂直对称居中，增加呼吸间距）
+            let imageSize: CGFloat = 32.0
             let subtitleHeight: CGFloat = 20.0
-            let spacing: CGFloat = 8.0
+            let spacing: CGFloat = 12.0
             let totalContentHeight = imageSize + spacing + subtitleHeight
             let topPadding = (viewHeight - totalContentHeight) / 2.0
 
@@ -116,8 +116,8 @@ open class PKHUDSquareBaseView: UIView {
         } else if hasTitle {
             // 模式 3: 仅主标题 + 图标（整体严格垂直对称居中）
             let titleHeight: CGFloat = 20.0
-            let imageSize: CGFloat = 36.0
-            let spacing: CGFloat = 8.0
+            let imageSize: CGFloat = 32.0
+            let spacing: CGFloat = 12.0
             let totalContentHeight = titleHeight + spacing + imageSize
             let topPadding = (viewHeight - totalContentHeight) / 2.0
 
@@ -126,7 +126,7 @@ open class PKHUDSquareBaseView: UIView {
             subtitleLabel.frame = .zero
         } else {
             // 模式 4: 纯图标（大图标绝对正中心）
-            let imageSize: CGFloat = 44.0
+            let imageSize: CGFloat = 42.0
             imageView.frame = CGRect(x: (viewWidth - imageSize) / 2.0 + originX, y: (viewHeight - imageSize) / 2.0, width: imageSize, height: imageSize)
             titleLabel.frame = .zero
             subtitleLabel.frame = .zero
