@@ -9,7 +9,7 @@
 
 import UIKit
 
-/// The container used to display the PKHUD within. Placed atop the application's view hierarchy.
+/// ContainerView 用于承载 FrameView 及半透明背景遮罩的顶层容器视图，负责键盘弹起避让及淡入淡出动效。
 @MainActor
 internal class ContainerView: UIView {
 

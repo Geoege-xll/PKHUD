@@ -9,15 +9,18 @@
 
 import UIKit
 
-/// PKHUDTextView provides a wide, three line text view, which you can use to display information.
+/// PKHUDTextView 提供支持最多三行文本展示的横向宽卡片视图（适合纯文字 Toast 提示）。
 @MainActor
 open class PKHUDTextView: PKHUDWideBaseView {
 
+    /// 使用文本初始化视图
+    /// - Parameter text: 提示文本内容
     public init(text: String?) {
         super.init()
         commonInit(text)
     }
 
+    /// 解档初始化
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit("")
@@ -28,6 +31,7 @@ open class PKHUDTextView: PKHUDWideBaseView {
         addSubview(titleLabel)
     }
 
+    /// 布局子视图
     open override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -35,6 +39,7 @@ open class PKHUDTextView: PKHUDWideBaseView {
         titleLabel.frame = bounds.insetBy(dx: padding, dy: padding)
     }
 
+    /// 提示文本标签
     public let titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center

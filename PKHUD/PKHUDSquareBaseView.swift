@@ -9,22 +9,30 @@
 
 import UIKit
 
-/// PKHUDSquareBaseView provides a square view, which you can subclass and add additional views to.
+/// PKHUDSquareBaseView 正方形 HUD 基础容器视图，负责图片与双行文本（标题/副标题）的自适应居中排版。
 @MainActor
 open class PKHUDSquareBaseView: UIView {
 
+    /// 默认正方形基础视图 Frame
     public static var defaultSquareBaseViewFrame: CGRect {
         return CGRect(origin: .zero, size: PKHUD.squareSize)
     }
 
+    /// 使用指定 Frame 初始化视图
     public override init(frame: CGRect) {
         super.init(frame: frame)
     }
 
+    /// 解档初始化
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
+    /// 便捷初始化正方形 HUD 视图
+    /// - Parameters:
+    ///   - image: 展示的静态/矢量图标
+    ///   - title: 可选主标题文本
+    ///   - subtitle: 可选副标题文本
     public init(image: UIImage? = nil, title: String? = nil, subtitle: String? = nil) {
         super.init(frame: PKHUDSquareBaseView.defaultSquareBaseViewFrame)
         self.imageView.image = image
@@ -36,6 +44,7 @@ open class PKHUDSquareBaseView: UIView {
         addSubview(subtitleLabel)
     }
 
+    /// 居中图标视图
     public let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
@@ -44,6 +53,7 @@ open class PKHUDSquareBaseView: UIView {
         return imageView
     }()
 
+    /// 主标题标签
     public let titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -54,6 +64,7 @@ open class PKHUDSquareBaseView: UIView {
         return label
     }()
 
+    /// 副标题标签
     public let subtitleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -65,6 +76,7 @@ open class PKHUDSquareBaseView: UIView {
         return label
     }()
 
+    /// 重新布局子视图（根据是否存在标题/副标题进行自适应黄金居中排版）
     open override func layoutSubviews() {
         super.layoutSubviews()
 

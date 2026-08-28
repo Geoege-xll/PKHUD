@@ -9,7 +9,7 @@
 
 import UIKit
 
-/// PKHUDSuccessView provides an animated success (checkmark) view.
+/// PKHUDSuccessView 提供带有动态绘制动画的成功对勾视图。
 @MainActor
 open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
 
@@ -33,16 +33,22 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
         return layer
     }()
 
+    /// 初始化成功视图
+    /// - Parameters:
+    ///   - title: 可选主标题
+    ///   - subtitle: 可选副标题
     public init(title: String? = nil, subtitle: String? = nil) {
         super.init(title: title, subtitle: subtitle)
         layer.addSublayer(checkmarkShapeLayer)
     }
 
+    /// 解档初始化
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         layer.addSublayer(checkmarkShapeLayer)
     }
 
+    /// 布局子视图与对勾图层位置
     open override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -62,11 +68,13 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
         }
     }
 
+    /// 深浅色外观切换更新
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         checkmarkShapeLayer.strokeColor = PKHUD.tintColor.cgColor
     }
 
+    /// 开始对勾绘制动画
     open func startAnimation() {
         let checkmarkStrokeAnimation = CAKeyframeAnimation(keyPath: "strokeEnd")
         checkmarkStrokeAnimation.values = [0, 1]
@@ -76,6 +84,7 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
         checkmarkShapeLayer.add(checkmarkStrokeAnimation, forKey: "checkmarkStrokeAnim")
     }
 
+    /// 停止动画
     open func stopAnimation() {
         checkmarkShapeLayer.removeAnimation(forKey: "checkmarkStrokeAnimation")
     }

@@ -9,7 +9,7 @@
 
 import UIKit
 
-/// PKHUDErrorView provides an animated error (cross) view.
+/// PKHUDErrorView 提供带有动态旋转弹出动画的错误叉号视图。
 @MainActor
 open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
 
@@ -36,18 +36,24 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
         return dash
     }
 
+    /// 初始化错误视图
+    /// - Parameters:
+    ///   - title: 可选主标题
+    ///   - subtitle: 可选副标题
     public init(title: String? = nil, subtitle: String? = nil) {
         super.init(title: title, subtitle: subtitle)
         layer.addSublayer(dashOneLayer)
         layer.addSublayer(dashTwoLayer)
     }
 
+    /// 解档初始化
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         layer.addSublayer(dashOneLayer)
         layer.addSublayer(dashTwoLayer)
     }
 
+    /// 布局子视图与叉号图层位置
     open override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -69,6 +75,7 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
         dashTwoLayer.position = center
     }
 
+    /// 深浅色外观切换更新
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         dashOneLayer.strokeColor = PKHUD.tintColor.cgColor
@@ -86,6 +93,7 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
         return animation
     }
 
+    /// 开始叉号旋转动画
     open func startAnimation() {
         let dashOneAnimation = rotationAnimation(45.0)
         let dashTwoAnimation = rotationAnimation(-45.0)
@@ -97,6 +105,7 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
         dashTwoLayer.add(dashTwoAnimation, forKey: "dashTwoAnimation")
     }
 
+    /// 停止动画
     open func stopAnimation() {
         dashOneLayer.removeAnimation(forKey: "dashOneAnimation")
         dashTwoLayer.removeAnimation(forKey: "dashTwoAnimation")

@@ -9,7 +9,7 @@
 
 import UIKit
 
-/// Serves as a configuration relay controller, tapping into the main window's rootViewController settings.
+/// WindowRootViewController 作为状态栏与屏幕方向配置的中继控制器，自动跟随主 Window 当前顶层控制器的状态。
 @MainActor
 internal class WindowRootViewController: UIViewController {
 

@@ -9,8 +9,11 @@
 
 import UIKit
 
+/// PKHUDAnimating 动画视图协议，遵循此协议的视图在 HUD 显示与隐藏时会自动触发启动和停止动画。
 @MainActor
 @objc public protocol PKHUDAnimating {
+    /// 触发并启动动画
     func startAnimation()
+    /// 停止动画
     @objc optional func stopAnimation()
 }

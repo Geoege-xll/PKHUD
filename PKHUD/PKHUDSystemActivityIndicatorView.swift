@@ -9,20 +9,23 @@
 
 import UIKit
 
-/// PKHUDSystemActivityIndicatorView provides the system UIActivityIndicatorView as an alternative.
+/// PKHUDSystemActivityIndicatorView 提供基于系统原生 UIActivityIndicatorView 的加载指示器视图。
 @MainActor
 public final class PKHUDSystemActivityIndicatorView: PKHUDSquareBaseView, PKHUDAnimating {
 
+    /// 初始化系统活动指示器视图
     public init() {
         super.init(frame: PKHUDSquareBaseView.defaultSquareBaseViewFrame)
         commonInit()
     }
 
+    /// 使用指定 Frame 初始化
     public override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
 
+    /// 解档初始化
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
@@ -35,6 +38,7 @@ public final class PKHUDSystemActivityIndicatorView: PKHUDSquareBaseView, PKHUDA
         addSubview(activityIndicatorView)
     }
 
+    /// 布局指示器中心点
     public override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -58,10 +62,12 @@ public final class PKHUDSystemActivityIndicatorView: PKHUDSquareBaseView, PKHUDA
         return activity
     }()
 
+    /// 开始动画
     public func startAnimation() {
         activityIndicatorView.startAnimating()
     }
 
+    /// 停止动画
     public func stopAnimation() {
         activityIndicatorView.stopAnimating()
     }

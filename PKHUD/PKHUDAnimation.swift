@@ -10,8 +10,10 @@
 import Foundation
 import QuartzCore
 
+/// PKHUDAnimation 预置的核心动画工厂类，提供离散旋转及平滑连续旋转的核心动画实例。
 public final class PKHUDAnimation: Sendable {
 
+    /// 12 段离散跳跃旋转动画（常用于经典 iOS 系统菊花 Loading 效果）
     public static let discreteRotation: CAAnimation = {
         let animation = CAKeyframeAnimation(keyPath: "transform.rotation.z")
         animation.values = [
@@ -50,6 +52,7 @@ public final class PKHUDAnimation: Sendable {
         return animation
     }()
 
+    /// 360 度平滑连续匀速旋转动画（常用于圆环或自定义图标旋转 Loading）
     public static let continuousRotation: CAAnimation = {
         let animation = CABasicAnimation(keyPath: "transform.rotation.z")
         animation.fromValue = 0.0

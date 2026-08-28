@@ -9,13 +9,14 @@
 
 import UIKit
 
-/// The PKHUD object controls showing and hiding of the HUD, as well as its contents and touch response behavior.
+/// PKHUD 核心控制器类，负责 HUD 窗口的管理、呈现/隐藏调度、动画生命周期以及触控事件拦截。
 @MainActor
 open class PKHUD: NSObject {
 
+    /// PKHUD 单例对象
     public static let sharedHUD = PKHUD()
 
-    // MARK: - Global Configuration Properties
+    // MARK: - 全局默认外观与排版配置
 
     /// 默认正方形 HUD 卡片尺寸（默认 110 x 110 pt）
     public static var squareSize: CGSize = CGSize(width: 110.0, height: 110.0)
@@ -23,34 +24,38 @@ open class PKHUD: NSObject {
     /// 默认横向宽 HUD 卡片尺寸（默认 220 x 75 pt）
     public static var wideSize: CGSize = CGSize(width: 220.0, height: 75.0)
 
-    /// 标题字体大小（默认 15pt bold）
+    /// 默认主标题字体（默认 15pt bold）
     public static var titleFont: UIFont = UIFont.boldSystemFont(ofSize: 15.0)
 
-    /// 标题字体颜色（默认 .label）
+    /// 默认主标题颜色（默认 .label）
     public static var titleColor: UIColor = UIColor.label
 
-    /// 副标题/正文字体大小（默认 13pt system）
+    /// 默认副标题字体（默认 13pt system）
     public static var subtitleFont: UIFont = UIFont.systemFont(ofSize: 13.0)
 
-    /// 副标题/正文字体颜色（默认 .secondaryLabel）
+    /// 默认副标题颜色（默认 .secondaryLabel）
     public static var subtitleColor: UIColor = UIColor.secondaryLabel
 
-    /// 图标/加载环主题色（默认 .label）
+    /// 默认图标/动效主题色（默认 .label）
     public static var tintColor: UIColor = UIColor.label
 
-    // MARK: - Instance Properties
+    // MARK: - 实例属性
 
+    /// 指定展示的目标视图容器（为 nil 时自动寻找当前活跃的 keyWindow）
     public var viewToPresentOn: UIView?
 
     fileprivate let container = ContainerView()
     fileprivate var hideTimer: Timer?
 
+    /// 隐藏动画完成回调类型
     public typealias TimerAction = (Bool) -> Void
     fileprivate var timerActions = [String: TimerAction]()
 
+    /// 延时宽限期（单位：秒）。在此宽限期内如果任务完成并调用了 hide，HUD 将不会显示，避免闪烁。默认 0。
     public var gracePeriod: TimeInterval = 0
     fileprivate var graceTimer: Timer?
 
+    /// 初始化 PKHUD 实例
     public override init() {
         super.init()
 
@@ -68,6 +73,8 @@ open class PKHUD: NSObject {
         self.container.accessibilityIdentifier = "PKHUD"
     }
 
+    /// 便利构造方法，指定展示的父视图
+    /// - Parameter view: 承载 HUD 的视图
     public convenience init(viewToPresentOn view: UIView) {
         self.init()
         viewToPresentOn = view
@@ -77,7 +84,10 @@ open class PKHUD: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
 
+    /// 是否对背景进行半透明变暗遮罩（默认 true）
     open var dimsBackground = true
+
+    /// 是否允许用户穿透 HUD 点击底层视图（默认 false）
     open var userInteractionOnUnderlyingViewsEnabled: Bool {
         get {
             return !container.isUserInteractionEnabled
@@ -87,10 +97,12 @@ open class PKHUD: NSObject {
         }
     }
 
+    /// 当前 HUD 是否可见
     open var isVisible: Bool {
         return !container.isHidden && !container.willHide
     }
 
+    /// HUD 毛玻璃卡片圆角大小（默认 16.0 pt，启用 Apple 原生平滑曲率）
     open var cornerRadius: CGFloat {
         get {
             return container.frameView.cornerRadius
@@ -100,6 +112,7 @@ open class PKHUD: NSObject {
         }
     }
 
+    /// HUD 内部承载的内容视图
     open var contentView: UIView {
         get {
             return container.frameView.content
@@ -110,6 +123,7 @@ open class PKHUD: NSObject {
         }
     }
 
+    /// HUD 毛玻璃视觉特效
     open var effect: UIVisualEffect? {
         get {
             return container.frameView.effect
@@ -119,8 +133,13 @@ open class PKHUD: NSObject {
         }
     }
 
+    /// HUD 容器左侧安全边距
     open var leadingMargin: CGFloat = 0
+
+    /// HUD 容器右侧安全边距
     open var trailingMargin: CGFloat = 0
+
+    // MARK: - 辅助方法
 
     private static func findKeyWindow() -> UIWindow? {
         if #available(iOS 15.0, *) {
@@ -132,6 +151,10 @@ open class PKHUD: NSObject {
         }
     }
 
+    // MARK: - 公开展现与隐藏控制方法
+
+    /// 显示 HUD
+    /// - Parameter view: 指定挂载的父视图（为 nil 时自动获取 keyWindow）
     open func show(onView view: UIView? = nil) {
         guard let targetView = view ?? viewToPresentOn ?? PKHUD.findKeyWindow() else {
             return
@@ -149,7 +172,7 @@ open class PKHUD: NSObject {
             container.showBackground(animated: true)
         }
 
-        // If the grace time is set, postpone the HUD display
+        // 如果设置了宽限期，延迟展现
         if gracePeriod > 0.0 {
             let timer = Timer(timeInterval: gracePeriod, target: self, selector: #selector(PKHUD.handleGraceTimer(_:)), userInfo: nil, repeats: false)
             RunLoop.current.add(timer, forMode: .common)
@@ -165,6 +188,10 @@ open class PKHUD: NSObject {
         startAnimatingContentView()
     }
 
+    /// 隐藏 HUD
+    /// - Parameters:
+    ///   - anim: 是否包含淡出动画（默认 true）
+    ///   - completion: 隐藏完成回调
     open func hide(animated anim: Bool = true, completion: TimerAction? = nil) {
         graceTimer?.invalidate()
 
@@ -172,10 +199,18 @@ open class PKHUD: NSObject {
         stopAnimatingContentView()
     }
 
+    /// 隐藏 HUD（包含动画）
+    /// - Parameters:
+    ///   - animated: 是否包含动画
+    ///   - completion: 隐藏完成回调
     open func hide(_ animated: Bool, completion: TimerAction? = nil) {
         hide(animated: animated, completion: completion)
     }
 
+    /// 在指定的 delay 秒后自动淡出隐藏 HUD
+    /// - Parameters:
+    ///   - delay: 延迟秒数
+    ///   - completion: 隐藏完成回调
     open func hide(afterDelay delay: TimeInterval, completion: TimerAction? = nil) {
         let key = UUID().uuidString
         let userInfo = ["timerActionKey": key]
@@ -191,7 +226,7 @@ open class PKHUD: NSObject {
                                          repeats: false)
     }
 
-    // MARK: Internal
+    // MARK: - 内部通知与动效控制
 
     @objc internal func willEnterForeground(_ notification: Notification?) {
         self.startAnimatingContentView()
@@ -209,15 +244,17 @@ open class PKHUD: NSObject {
         }
     }
 
+    /// 注册键盘监听
     internal func registerForKeyboardNotifications() {
         container.registerForKeyboardNotifications()
     }
 
+    /// 注销键盘监听
     internal func deregisterFromKeyboardNotifications() {
         container.deregisterFromKeyboardNotifications()
     }
 
-    // MARK: Timer callbacks
+    // MARK: - 定时器回调
 
     @objc internal func performDelayedHide(_ timer: Timer? = nil) {
         let userInfo = timer?.userInfo as? [String: AnyObject]

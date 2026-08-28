@@ -10,14 +10,16 @@
 import UIKit
 import QuartzCore
 
-/// PKHUDRotatingImageView provides a content view that rotates the supplied image automatically.
+/// PKHUDRotatingImageView 旋转图片视图，使传入的图片自动执行 360 度连续旋转动画。
 @MainActor
 open class PKHUDRotatingImageView: PKHUDSquareBaseView, PKHUDAnimating {
 
+    /// 开始连续旋转动画
     public func startAnimation() {
         imageView.layer.add(PKHUDAnimation.continuousRotation, forKey: "progressAnimation")
     }
 
+    /// 停止旋转动画
     public func stopAnimation() {
         imageView.layer.removeAnimation(forKey: "progressAnimation")
     }
