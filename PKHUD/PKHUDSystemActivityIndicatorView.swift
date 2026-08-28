@@ -14,8 +14,9 @@ import UIKit
 public final class PKHUDSystemActivityIndicatorView: PKHUDSquareBaseView, PKHUDAnimating {
 
     /// 初始化系统活动指示器视图
-    public init() {
-        super.init(frame: PKHUDSquareBaseView.defaultSquareBaseViewFrame)
+    /// - Parameter title: 可选提示文本
+    public init(title: String? = nil) {
+        super.init(title: title)
         commonInit()
     }
 
@@ -38,24 +39,15 @@ public final class PKHUDSystemActivityIndicatorView: PKHUDSquareBaseView, PKHUDA
         addSubview(activityIndicatorView)
     }
 
-    /// 布局指示器中心点（严格与图片槽位中心对齐）
+    /// 布局指示器中心点（与图标槽位严格对齐）
     public override func layoutSubviews() {
         super.layoutSubviews()
 
         let hasTitle = !(titleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
-        let hasSubtitle = !(subtitleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
 
-        if hasTitle && hasSubtitle {
-            let topPadding = max(6.0, (bounds.height - (18.0 + 8.0 + 30.0 + 8.0 + 18.0)) / 2.0)
-            let centerY = topPadding + 18.0 + 8.0 + 30.0 / 2.0
-            activityIndicatorView.center = CGPoint(x: bounds.midX, y: centerY)
-        } else if hasSubtitle {
+        if hasTitle {
             let topPadding = (bounds.height - (32.0 + 12.0 + 20.0)) / 2.0
             let centerY = topPadding + 32.0 / 2.0
-            activityIndicatorView.center = CGPoint(x: bounds.midX, y: centerY)
-        } else if hasTitle {
-            let topPadding = (bounds.height - (20.0 + 12.0 + 32.0)) / 2.0
-            let centerY = topPadding + 20.0 + 12.0 + 32.0 / 2.0
             activityIndicatorView.center = CGPoint(x: bounds.midX, y: centerY)
         } else {
             activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.midY)

@@ -34,11 +34,9 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
     }()
 
     /// 初始化成功视图
-    /// - Parameters:
-    ///   - title: 可选主标题
-    ///   - subtitle: 可选副标题
-    public init(title: String? = nil, subtitle: String? = nil) {
-        super.init(title: title, subtitle: subtitle)
+    /// - Parameter title: 可选提示文本
+    public init(title: String? = nil) {
+        super.init(title: title)
         layer.addSublayer(checkmarkShapeLayer)
     }
 
@@ -48,24 +46,15 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
         layer.addSublayer(checkmarkShapeLayer)
     }
 
-    /// 布局子视图与对勾图层位置（严格与图片槽位中心对齐）
+    /// 布局子视图与对勾图层位置（与图标槽位严格对齐）
     open override func layoutSubviews() {
         super.layoutSubviews()
 
         let hasTitle = !(titleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
-        let hasSubtitle = !(subtitleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
 
-        if hasTitle && hasSubtitle {
-            let topPadding = max(6.0, (bounds.height - (18.0 + 8.0 + 30.0 + 8.0 + 18.0)) / 2.0)
-            let centerY = topPadding + 18.0 + 8.0 + 30.0 / 2.0
-            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
-        } else if hasSubtitle {
+        if hasTitle {
             let topPadding = (bounds.height - (32.0 + 12.0 + 20.0)) / 2.0
             let centerY = topPadding + 32.0 / 2.0
-            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
-        } else if hasTitle {
-            let topPadding = (bounds.height - (20.0 + 12.0 + 32.0)) / 2.0
-            let centerY = topPadding + 20.0 + 12.0 + 32.0 / 2.0
             checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
         } else {
             checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
