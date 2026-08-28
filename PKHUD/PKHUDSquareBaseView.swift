@@ -13,7 +13,9 @@ import UIKit
 @MainActor
 open class PKHUDSquareBaseView: UIView {
 
-    public static let defaultSquareBaseViewFrame = CGRect(origin: CGPoint.zero, size: CGSize(width: 156.0, height: 156.0))
+    public static var defaultSquareBaseViewFrame: CGRect {
+        return CGRect(origin: .zero, size: PKHUD.squareSize)
+    }
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -38,15 +40,15 @@ open class PKHUDSquareBaseView: UIView {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
         imageView.contentMode = .center
-        imageView.tintColor = .label
+        imageView.tintColor = PKHUD.tintColor
         return imageView
     }()
 
     public let titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.boldSystemFont(ofSize: 17.0)
-        label.textColor = UIColor.label
+        label.font = PKHUD.titleFont
+        label.textColor = PKHUD.titleColor
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.25
         return label
@@ -55,8 +57,8 @@ open class PKHUDSquareBaseView: UIView {
     public let subtitleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 14.0)
-        label.textColor = UIColor.secondaryLabel
+        label.font = PKHUD.subtitleFont
+        label.textColor = PKHUD.subtitleColor
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 2
         label.minimumScaleFactor = 0.25
@@ -71,12 +73,31 @@ open class PKHUDSquareBaseView: UIView {
         let viewWidth = bounds.size.width - 2 * margin
         let viewHeight = bounds.size.height
 
-        let halfHeight = ceil(viewHeight / 2.0)
-        let quarterHeight = ceil(viewHeight / 4.0)
-        let threeQuarterHeight = ceil(viewHeight / 4.0 * 3.0)
+        let hasTitle = !(titleLabel.text?.isEmpty ?? true)
+        let hasSubtitle = !(subtitleLabel.text?.isEmpty ?? true)
 
-        titleLabel.frame = CGRect(origin: CGPoint(x: originX, y: 0.0), size: CGSize(width: viewWidth, height: quarterHeight))
-        imageView.frame = CGRect(origin: CGPoint(x: originX, y: quarterHeight), size: CGSize(width: viewWidth, height: halfHeight))
-        subtitleLabel.frame = CGRect(origin: CGPoint(x: originX, y: threeQuarterHeight), size: CGSize(width: viewWidth, height: quarterHeight))
+        if hasTitle && hasSubtitle {
+            let labelHeight: CGFloat = ceil(viewHeight * 0.22)
+            let imageHeight: CGFloat = viewHeight - 2 * labelHeight
+            titleLabel.frame = CGRect(x: originX, y: 4, width: viewWidth, height: labelHeight)
+            imageView.frame = CGRect(x: originX, y: labelHeight, width: viewWidth, height: imageHeight)
+            subtitleLabel.frame = CGRect(x: originX, y: viewHeight - labelHeight - 4, width: viewWidth, height: labelHeight)
+        } else if hasSubtitle {
+            let labelHeight: CGFloat = ceil(viewHeight * 0.28)
+            let imageHeight: CGFloat = viewHeight - labelHeight - 8
+            imageView.frame = CGRect(x: originX, y: 8, width: viewWidth, height: imageHeight)
+            subtitleLabel.frame = CGRect(x: originX, y: viewHeight - labelHeight - 6, width: viewWidth, height: labelHeight)
+            titleLabel.frame = .zero
+        } else if hasTitle {
+            let labelHeight: CGFloat = ceil(viewHeight * 0.28)
+            let imageHeight: CGFloat = viewHeight - labelHeight - 8
+            titleLabel.frame = CGRect(x: originX, y: 6, width: viewWidth, height: labelHeight)
+            imageView.frame = CGRect(x: originX, y: labelHeight + 6, width: viewWidth, height: imageHeight)
+            subtitleLabel.frame = .zero
+        } else {
+            imageView.frame = CGRect(x: originX, y: 0, width: viewWidth, height: viewHeight)
+            titleLabel.frame = .zero
+            subtitleLabel.frame = .zero
+        }
     }
 }

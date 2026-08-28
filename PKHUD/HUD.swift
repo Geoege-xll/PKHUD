@@ -62,6 +62,41 @@ public final class HUD {
         set { PKHUD.sharedHUD.effect = newValue }
     }
 
+    public static var squareSize: CGSize {
+        get { return PKHUD.squareSize }
+        set { PKHUD.squareSize = newValue }
+    }
+
+    public static var wideSize: CGSize {
+        get { return PKHUD.wideSize }
+        set { PKHUD.wideSize = newValue }
+    }
+
+    public static var titleFont: UIFont {
+        get { return PKHUD.titleFont }
+        set { PKHUD.titleFont = newValue }
+    }
+
+    public static var titleColor: UIColor {
+        get { return PKHUD.titleColor }
+        set { PKHUD.titleColor = newValue }
+    }
+
+    public static var subtitleFont: UIFont {
+        get { return PKHUD.subtitleFont }
+        set { PKHUD.subtitleFont = newValue }
+    }
+
+    public static var subtitleColor: UIColor {
+        get { return PKHUD.subtitleColor }
+        set { PKHUD.subtitleColor = newValue }
+    }
+
+    public static var tintColor: UIColor {
+        get { return PKHUD.tintColor }
+        set { PKHUD.tintColor = newValue }
+    }
+
     public static var isVisible: Bool { return PKHUD.sharedHUD.isVisible }
 
     // MARK: Public methods, PKHUD based
@@ -132,10 +167,10 @@ public final class HUD {
             return PKHUDRotatingImageView(image: image, title: title, subtitle: subtitle)
 
         case let .systemImage(name, title, subtitle):
-            let config = UIImage.SymbolConfiguration(pointSize: 40, weight: .semibold)
+            let config = UIImage.SymbolConfiguration(pointSize: 36, weight: .semibold)
             let img = UIImage(systemName: name, withConfiguration: config)?.withRenderingMode(.alwaysTemplate)
             let view = PKHUDSquareBaseView(image: img, title: title, subtitle: subtitle)
-            view.imageView.tintColor = .label
+            view.imageView.tintColor = HUD.tintColor
             return view
 
         case let .label(text):

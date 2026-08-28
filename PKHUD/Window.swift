@@ -56,7 +56,7 @@ internal class ContainerView: UIView {
         isHidden = false
     }
 
-    fileprivate var willHide = false
+    internal var willHide = false
 
     internal func hideFrameView(animated anim: Bool, completion: ((Bool) -> Void)? = nil) {
         let finalize: (_ finished: Bool) -> Void = { finished in

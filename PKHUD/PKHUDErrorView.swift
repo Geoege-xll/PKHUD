@@ -18,11 +18,11 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
 
     class func generateDashLayer() -> CAShapeLayer {
         let dash = CAShapeLayer()
-        dash.frame = CGRect(x: 0.0, y: 0.0, width: 88.0, height: 88.0)
+        dash.frame = CGRect(x: 0.0, y: 0.0, width: 48.0, height: 48.0)
         dash.path = {
             let path = UIBezierPath()
-            path.move(to: CGPoint(x: 0.0, y: 44.0))
-            path.addLine(to: CGPoint(x: 88.0, y: 44.0))
+            path.move(to: CGPoint(x: 0.0, y: 24.0))
+            path.addLine(to: CGPoint(x: 48.0, y: 24.0))
             return path.cgPath
         }()
 
@@ -31,8 +31,8 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
         dash.fillMode = .forwards
 
         dash.fillColor = nil
-        dash.strokeColor = UIColor.label.cgColor
-        dash.lineWidth = 6
+        dash.strokeColor = PKHUD.tintColor.cgColor
+        dash.lineWidth = 5.0
         return dash
     }
 
@@ -40,38 +40,40 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
         super.init(title: title, subtitle: subtitle)
         layer.addSublayer(dashOneLayer)
         layer.addSublayer(dashTwoLayer)
-        dashOneLayer.position = layer.position
-        dashTwoLayer.position = layer.position
     }
 
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         layer.addSublayer(dashOneLayer)
         layer.addSublayer(dashTwoLayer)
-        dashOneLayer.position = layer.position
-        dashTwoLayer.position = layer.position
+    }
+
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+
+        let hasTitle = !(titleLabel.text?.isEmpty ?? true)
+        let hasSubtitle = !(subtitleLabel.text?.isEmpty ?? true)
+
+        let center: CGPoint
+        if hasTitle || hasSubtitle {
+            center = CGPoint(x: bounds.midX, y: bounds.height * 0.40)
+        } else {
+            center = CGPoint(x: bounds.midX, y: bounds.midY)
+        }
+
+        dashOneLayer.position = center
+        dashTwoLayer.position = center
     }
 
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        dashOneLayer.strokeColor = UIColor.label.cgColor
-        dashTwoLayer.strokeColor = UIColor.label.cgColor
+        dashOneLayer.strokeColor = PKHUD.tintColor.cgColor
+        dashTwoLayer.strokeColor = PKHUD.tintColor.cgColor
     }
 
     func rotationAnimation(_ angle: CGFloat) -> CAKeyframeAnimation {
         let animation = CAKeyframeAnimation(keyPath: "transform.rotation.z")
         let values: [NSNumber] = [0.0, NSNumber(value: Float(angle * (.pi / 180)))]
-        animation.values = values
-        animation.duration = 0.2
-        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        animation.isRemovedOnCompletion = false
-        animation.fillMode = .forwards
-        return animation
-    }
-
-    func scaleAnimation() -> CAKeyframeAnimation {
-        let animation = CAKeyframeAnimation(keyPath: "transform.scale")
-        let values: [NSNumber] = [1.0, 1.2, 1.0]
         animation.values = values
         animation.duration = 0.2
         animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)

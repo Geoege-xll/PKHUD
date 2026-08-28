@@ -13,7 +13,9 @@ import UIKit
 @MainActor
 open class PKHUDWideBaseView: UIView {
 
-    public static let defaultWideBaseViewFrame = CGRect(origin: CGPoint.zero, size: CGSize(width: 265.0, height: 90.0))
+    public static var defaultWideBaseViewFrame: CGRect {
+        return CGRect(origin: .zero, size: PKHUD.wideSize)
+    }
 
     public init() {
         super.init(frame: PKHUDWideBaseView.defaultWideBaseViewFrame)

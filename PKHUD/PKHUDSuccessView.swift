@@ -15,12 +15,12 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
 
     var checkmarkShapeLayer: CAShapeLayer = {
         let checkmarkPath = UIBezierPath()
-        checkmarkPath.move(to: CGPoint(x: 4.0, y: 27.0))
-        checkmarkPath.addLine(to: CGPoint(x: 34.0, y: 56.0))
-        checkmarkPath.addLine(to: CGPoint(x: 88.0, y: 0.0))
+        checkmarkPath.move(to: CGPoint(x: 3.0, y: 22.0))
+        checkmarkPath.addLine(to: CGPoint(x: 22.0, y: 42.0))
+        checkmarkPath.addLine(to: CGPoint(x: 60.0, y: 0.0))
 
         let layer = CAShapeLayer()
-        layer.frame = CGRect(x: 3.0, y: 3.0, width: 88.0, height: 56.0)
+        layer.frame = CGRect(x: 0.0, y: 0.0, width: 60.0, height: 42.0)
         layer.path = checkmarkPath.cgPath
 
         layer.fillMode = .forwards
@@ -28,26 +28,38 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
         layer.lineJoin = .round
 
         layer.fillColor = nil
-        layer.strokeColor = UIColor.label.cgColor
-        layer.lineWidth = 6.0
+        layer.strokeColor = PKHUD.tintColor.cgColor
+        layer.lineWidth = 5.0
         return layer
     }()
 
     public init(title: String? = nil, subtitle: String? = nil) {
         super.init(title: title, subtitle: subtitle)
         layer.addSublayer(checkmarkShapeLayer)
-        checkmarkShapeLayer.position = layer.position
     }
 
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         layer.addSublayer(checkmarkShapeLayer)
-        checkmarkShapeLayer.position = layer.position
+    }
+
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+
+        let hasTitle = !(titleLabel.text?.isEmpty ?? true)
+        let hasSubtitle = !(subtitleLabel.text?.isEmpty ?? true)
+
+        if hasTitle || hasSubtitle {
+            let centerY = bounds.height * 0.40
+            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
+        } else {
+            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        }
     }
 
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        checkmarkShapeLayer.strokeColor = UIColor.label.cgColor
+        checkmarkShapeLayer.strokeColor = PKHUD.tintColor.cgColor
     }
 
     open func startAnimation() {

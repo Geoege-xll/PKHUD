@@ -15,6 +15,31 @@ open class PKHUD: NSObject {
 
     public static let sharedHUD = PKHUD()
 
+    // MARK: - Global Configuration Properties
+
+    /// 默认正方形 HUD 卡片尺寸（默认 120 x 120 pt）
+    public static var squareSize: CGSize = CGSize(width: 120.0, height: 120.0)
+
+    /// 默认横向宽 HUD 卡片尺寸（默认 240 x 80 pt）
+    public static var wideSize: CGSize = CGSize(width: 240.0, height: 80.0)
+
+    /// 标题字体大小（默认 16pt bold）
+    public static var titleFont: UIFont = UIFont.boldSystemFont(ofSize: 16.0)
+
+    /// 标题字体颜色（默认 .label）
+    public static var titleColor: UIColor = UIColor.label
+
+    /// 副标题/正文字体大小（默认 13pt system）
+    public static var subtitleFont: UIFont = UIFont.systemFont(ofSize: 13.0)
+
+    /// 副标题/正文字体颜色（默认 .secondaryLabel）
+    public static var subtitleColor: UIColor = UIColor.secondaryLabel
+
+    /// 图标/加载环主题色（默认 .label）
+    public static var tintColor: UIColor = UIColor.label
+
+    // MARK: - Instance Properties
+
     public var viewToPresentOn: UIView?
 
     fileprivate let container = ContainerView()
@@ -63,7 +88,7 @@ open class PKHUD: NSObject {
     }
 
     open var isVisible: Bool {
-        return !container.isHidden
+        return !container.isHidden && !container.willHide
     }
 
     open var cornerRadius: CGFloat {
