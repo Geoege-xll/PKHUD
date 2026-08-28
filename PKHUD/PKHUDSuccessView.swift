@@ -48,10 +48,27 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
         layer.addSublayer(checkmarkShapeLayer)
     }
 
-    /// 布局子视图与对勾图层位置（始终锁定在卡片几何正中心）
+    /// 布局子视图与对勾图层位置（严格与图片槽位中心对齐）
     open override func layoutSubviews() {
         super.layoutSubviews()
-        checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+
+        let hasTitle = !(titleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+        let hasSubtitle = !(subtitleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+
+        if hasTitle && hasSubtitle {
+            let centerY = 4.0 + 18.0 + 6.0 + 34.0 / 2.0
+            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
+        } else if hasSubtitle {
+            let topPadding = (bounds.height - (36.0 + 8.0 + 20.0)) / 2.0
+            let centerY = topPadding + 36.0 / 2.0
+            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
+        } else if hasTitle {
+            let topPadding = (bounds.height - (20.0 + 8.0 + 36.0)) / 2.0
+            let centerY = topPadding + 20.0 + 8.0 + 36.0 / 2.0
+            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
+        } else {
+            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        }
     }
 
     /// 深浅色外观切换更新
