@@ -32,11 +32,12 @@ class DemoViewController: UIViewController {
     }
 
     @IBAction func showAnimatedSuccessHUD(_ sender: AnyObject) {
-        HUD.flash(.success("保存成功"), delay: 2.0)
+        HUD.flash(.success, delay: 2.0)
     }
 
     @IBAction func showAnimatedErrorHUD(_ sender: AnyObject) {
-        HUD.flash(.error("网络连接失败"), delay: 2.0)
+        HUD.show(.error)
+        HUD.hide(afterDelay: 2.0)
     }
 
     @IBAction func showAnimatedProgressHUD(_ sender: AnyObject) {
@@ -44,16 +45,16 @@ class DemoViewController: UIViewController {
 
         // 模拟异步任务
         delay(2.0) {
-            HUD.flash(.success("完成"), delay: 1.0)
+            HUD.flash(.success, delay: 1.0)
         }
     }
 
     @IBAction func showCustomProgressHUD(_ sender: AnyObject) {
-        HUD.flash(.rotatingImage(UIImage(named: "progress"), "正在处理"), delay: 2.0)
+        HUD.flash(.rotatingImage(UIImage(named: "progress")), delay: 2.0)
     }
 
     @IBAction func showAnimatedStatusProgressHUD(_ sender: AnyObject) {
-        HUD.flash(.progress("加载中..."), delay: 2.0)
+        HUD.flash(.labeledProgress(title: nil, subtitle: "加载中.."), delay: 2.0)
     }
 
     @IBAction func showTextHUD(_ sender: AnyObject) {

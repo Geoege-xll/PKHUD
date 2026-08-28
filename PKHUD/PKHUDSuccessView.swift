@@ -15,12 +15,12 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
 
     var checkmarkShapeLayer: CAShapeLayer = {
         let checkmarkPath = UIBezierPath()
-        checkmarkPath.move(to: CGPoint(x: 2.0, y: 15.0))
-        checkmarkPath.addLine(to: CGPoint(x: 15.0, y: 28.0))
-        checkmarkPath.addLine(to: CGPoint(x: 40.0, y: 0.0))
+        checkmarkPath.move(to: CGPoint(x: 3.0, y: 20.0))
+        checkmarkPath.addLine(to: CGPoint(x: 20.0, y: 37.0))
+        checkmarkPath.addLine(to: CGPoint(x: 58.0, y: 0.0))
 
         let layer = CAShapeLayer()
-        layer.frame = CGRect(x: 0.0, y: 0.0, width: 40.0, height: 28.0)
+        layer.frame = CGRect(x: 0.0, y: 0.0, width: 58.0, height: 37.0)
         layer.path = checkmarkPath.cgPath
 
         layer.fillMode = .forwards
@@ -29,37 +29,31 @@ open class PKHUDSuccessView: PKHUDSquareBaseView, PKHUDAnimating {
 
         layer.fillColor = nil
         layer.strokeColor = PKHUD.tintColor.cgColor
-        layer.lineWidth = 4.0
+        layer.lineWidth = 5.0
         return layer
     }()
 
     /// 初始化成功视图
-    /// - Parameter title: 可选提示文本
-    public init(title: String? = nil) {
-        super.init(title: title)
+    /// - Parameters:
+    ///   - title: 可选主标题
+    ///   - subtitle: 可选副标题
+    public init(title: String? = nil, subtitle: String? = nil) {
+        super.init(title: title, subtitle: subtitle)
         layer.addSublayer(checkmarkShapeLayer)
+        checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
 
     /// 解档初始化
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         layer.addSublayer(checkmarkShapeLayer)
+        checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
 
-    /// 布局子视图与对勾图层位置（严格与图片槽位中心对齐）
+    /// 布局对勾图层位置（严格位于视图正中心）
     open override func layoutSubviews() {
         super.layoutSubviews()
-
-        let hasTitle = !(titleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
-
-        if hasTitle {
-            let vPadding: CGFloat = 16.0
-            let iconSize: CGFloat = 32.0
-            let centerY = vPadding + iconSize / 2.0
-            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: centerY)
-        } else {
-            checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
-        }
+        checkmarkShapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
 
     /// 深浅色外观切换更新

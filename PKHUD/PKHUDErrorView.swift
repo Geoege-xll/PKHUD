@@ -18,11 +18,11 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
 
     class func generateDashLayer() -> CAShapeLayer {
         let dash = CAShapeLayer()
-        dash.frame = CGRect(x: 0.0, y: 0.0, width: 34.0, height: 34.0)
+        dash.frame = CGRect(x: 0.0, y: 0.0, width: 44.0, height: 44.0)
         dash.path = {
             let path = UIBezierPath()
-            path.move(to: CGPoint(x: 0.0, y: 17.0))
-            path.addLine(to: CGPoint(x: 34.0, y: 17.0))
+            path.move(to: CGPoint(x: 0.0, y: 22.0))
+            path.addLine(to: CGPoint(x: 44.0, y: 22.0))
             return path.cgPath
         }()
 
@@ -32,16 +32,20 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
 
         dash.fillColor = nil
         dash.strokeColor = PKHUD.tintColor.cgColor
-        dash.lineWidth = 4.0
+        dash.lineWidth = 5.0
         return dash
     }
 
     /// 初始化错误视图
-    /// - Parameter title: 可选提示文本
-    public init(title: String? = nil) {
-        super.init(title: title)
+    /// - Parameters:
+    ///   - title: 可选主标题
+    ///   - subtitle: 可选副标题
+    public init(title: String? = nil, subtitle: String? = nil) {
+        super.init(title: title, subtitle: subtitle)
         layer.addSublayer(dashOneLayer)
         layer.addSublayer(dashTwoLayer)
+        dashOneLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        dashTwoLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
 
     /// 解档初始化
@@ -49,26 +53,15 @@ open class PKHUDErrorView: PKHUDSquareBaseView, PKHUDAnimating {
         super.init(coder: aDecoder)
         layer.addSublayer(dashOneLayer)
         layer.addSublayer(dashTwoLayer)
+        dashOneLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        dashTwoLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
 
-    /// 布局子视图与叉号图层位置（严格与图片槽位中心对齐）
+    /// 布局叉号图层位置（严格位于视图正中心）
     open override func layoutSubviews() {
         super.layoutSubviews()
-
-        let hasTitle = !(titleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
-
-        let center: CGPoint
-        if hasTitle {
-            let vPadding: CGFloat = 16.0
-            let iconSize: CGFloat = 32.0
-            let centerY = vPadding + iconSize / 2.0
-            center = CGPoint(x: bounds.midX, y: centerY)
-        } else {
-            center = CGPoint(x: bounds.midX, y: bounds.midY)
-        }
-
-        dashOneLayer.position = center
-        dashTwoLayer.position = center
+        dashOneLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        dashTwoLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
 
     /// 深浅色外观切换更新

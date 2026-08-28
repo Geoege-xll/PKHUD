@@ -14,9 +14,11 @@ import UIKit
 public final class PKHUDSystemActivityIndicatorView: PKHUDSquareBaseView, PKHUDAnimating {
 
     /// 初始化系统活动指示器视图
-    /// - Parameter title: 可选提示文本
-    public init(title: String? = nil) {
-        super.init(title: title)
+    /// - Parameters:
+    ///   - title: 可选主标题
+    ///   - subtitle: 可选副标题
+    public init(title: String? = nil, subtitle: String? = nil) {
+        super.init(title: title, subtitle: subtitle)
         commonInit()
     }
 
@@ -39,20 +41,10 @@ public final class PKHUDSystemActivityIndicatorView: PKHUDSquareBaseView, PKHUDA
         addSubview(activityIndicatorView)
     }
 
-    /// 布局指示器中心点（与图标槽位严格对齐）
+    /// 布局指示器中心点（严格锁定在视图几何正中心）
     public override func layoutSubviews() {
         super.layoutSubviews()
-
-        let hasTitle = !(titleLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
-
-        if hasTitle {
-            let vPadding: CGFloat = 16.0
-            let iconSize: CGFloat = 32.0
-            let centerY = vPadding + iconSize / 2.0
-            activityIndicatorView.center = CGPoint(x: bounds.midX, y: centerY)
-        } else {
-            activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.midY)
-        }
+        activityIndicatorView.center = CGPoint(x: bounds.midX, y: bounds.midY)
     }
 
     let activityIndicatorView: UIActivityIndicatorView = {
